@@ -1,0 +1,17 @@
+H(f) = min(f) é linear?
+
+H(af + bg) = aH(f) + bH(g)
+
+min(af + bg) = a( min(f) ) + b( min(g) )
+
+f() = cos
+g() = sin
+
+seja o calculo no ponto 0
+
+min( acos(x) + bsin(x) ) = a(min(cos(x))) + b(min(sin(x)))
+min( R cos(x-a) ) = a(min(cos(x))) + b(min(sin(x)))
+R (-1) = a(-1) + b(-1)
+-R = -a-b (erro)
+
+
