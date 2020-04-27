@@ -53,10 +53,9 @@ def nchannels( img ):
 
 def compare_images( img1, img2, sub1="Imagem 1", sub2="Imagem 2"):
 	mp.subplot( 2, 1, 1 )
-
 	plt1 = mp.imshow(img1, cmap=mp.gray(), origin="upper", vmin=0, vmax=255)
 	plt1.set_interpolation('nearest')
-	mp.title( "Equalizacao de Histograma" )
+	mp.title( "Comparando Imagens" )
 	mp.ylabel( sub1 )
 	
 	mp.subplot( 2, 1, 2 )
@@ -342,7 +341,6 @@ def blur( img ):
 
 def blur_2( img ):
 	print("blur 2")
-	mask = maskBlur()
 	img_blured = convolve( img, (maskBlur()[1,:] * 2).reshape(1,3) )
 	img_blured = convolve( img_blured, (maskBlur()[1,:] * 2).reshape(3,1) )
 	return img_blured
@@ -357,76 +355,123 @@ def seCross3():
 	mask = np.array( ([ [0, 255, 0], [255, 255, 255], [0, 255, 0] ]) )
 	return mask
 
-def testaBinario( arr ):
-	contagem = np.bincount( arr.ravel() )
-	return contagem[0] + contagem[255] == arr.shape[0] * arr.shape[1]
+def morph_convolve( img, strEl, morph ):
+	print( "erode" )
+	print( "img:", img.shape )
+	print( "str:", strEl.shape )
+	
+	if( isinstance( img, np.ndarray ) and isinstance( strEl, np.ndarray ) ):
+		half_strel_i = floor( strEl.shape[0] / 2 )
+		half_strel_j = floor( strEl.shape[1] / 2 )
+
+		img_final = np.copy( img )
+
+		if( is_gray_image( img ) ):
+			for i in range( img.shape[0] ):
+				for j in range( img.shape[1] ):
+					if( morph == 'e' ): #erosion
+						controle = 255
+					elif( morph == 'd' ): #dilatation
+						controle = 0
+					for k in range( -half_strel_i, half_strel_i+1):
+						for l in range( -half_strel_j, half_strel_j+1 ):
+							if( strEl[k+half_strel_i, l+half_strel_j] != 0 ):
+								idx_img_i = i+k
+								idx_img_j = j+l
+
+								if( idx_img_i >= img.shape[0] ):
+									idx_img_i = img.shape[0] - 1
+								elif( idx_img_i < 0 ):
+									idx_img_i = 0
+												
+								if( idx_img_j >= img.shape[1] ):
+									idx_img_j = img.shape[1] - 1
+								elif( idx_img_j < 0 ):
+									idx_img_j = 0
+
+								if( morph == 'e' ): #erosion
+									if( img[idx_img_i, idx_img_j] < controle ):
+										controle = img[idx_img_i, idx_img_j]
+								elif( morph == 'd' ): #dilatation
+									if( img[idx_img_i, idx_img_j] > controle ):
+										controle = img[idx_img_i, idx_img_j]
+					img_final[i,j] = controle
+		else:
+			for i in range( img.shape[0] ):
+				for j in range( img.shape[1] ):
+					if( morph == 'e' ): #erosion
+						controle_r = 255
+						controle_g = 255
+						controle_b = 255
+					elif( morph == 'd' ): #dilatation
+						controle_r = 0
+						controle_g = 0
+						controle_b = 0
+					for k in range( -half_strel_i, half_strel_i+1):
+						for l in range( -half_strel_j, half_strel_j+1 ):
+							if( strEl[k+half_strel_i, l+half_strel_j] != 0 ):
+								idx_img_i = i+k
+								idx_img_j = j+l
+
+								if( idx_img_i >= img.shape[0] ):
+									idx_img_i = img.shape[0] - 1
+								elif( idx_img_i < 0 ):
+									idx_img_i = 0
+												
+								if( idx_img_j >= img.shape[1] ):
+									idx_img_j = img.shape[1] - 1
+								elif( idx_img_j < 0 ):
+									idx_img_j = 0
+
+								if( morph == 'e' ): #erosion
+									if( img[idx_img_i, idx_img_j, 0] < controle_r ):
+										controle_r = img[idx_img_i, idx_img_j, 0]
+									if( img[idx_img_i, idx_img_j, 1] < controle_g ):
+										controle_g = img[idx_img_i, idx_img_j, 1]
+									if( img[idx_img_i, idx_img_j, 2] < controle_b ):
+										controle_b = img[idx_img_i, idx_img_j, 2]
+								elif( morph == 'd' ): #dilatation
+									if( img[idx_img_i, idx_img_j, 0] > controle_r ):
+										controle_r = img[idx_img_i, idx_img_j, 0]
+									if( img[idx_img_i, idx_img_j, 1] > controle_g ):
+										controle_g = img[idx_img_i, idx_img_j, 1]
+									if( img[idx_img_i, idx_img_j, 2] > controle_b ):
+										controle_b = img[idx_img_i, idx_img_j, 2]
+					
+					img_final[i,j,0] = controle_r
+					img_final[i,j,1] = controle_g
+					img_final[i,j,2] = controle_b
+		
+	return img_final
 
 def erode( img, strEl ):
-	half_strel_i = floor( strEl.shape[0] / 2 )
-	half_strel_j = floor( strEl.shape[1] / 2 )
-
-	it_max_i = img.shape[0] - half_strel_i - 1
-	it_max_j = img.shape[1] - half_strel_j - 1
-
-	soma_strel = strEl.sum()
-
-	if( isinstance( img, np.ndarray ) and isinstance( strEl, np.ndarray ) ):
-		if( testaBinario( img ) and testaBinario( strEl ) ):
-			img_final = np.zeros( (img.shape[0], img.shape[1]), np.uint8 )
-			for i in range( half_strel_i, img.shape[0] - half_strel_i - 1 ):
-				for j in range( half_strel_j, it_max_j ):
-					marca = False
-					for k in range( strEl.shape[0] ):
-						for l in range( strEl.shape[1] ):
-							img_pxl = img[i+k, j+l]
-							if( img_pxl == strEl[k,l] ):
-								soma_img += strEl[k,l]
-
-			return img_final
-
+	return morph_convolve(img, strEl, 'e')
+	
 def dilate( img, strEl ):
-	half_strel_i = floor( strEl.shape[0] / 2 )
-	half_strel_j = floor( strEl.shape[1] / 2 )
+	return morph_convolve(img, strEl, 'd')
 
-	it_max_i = img.shape[0] - half_strel_i - 1
-	it_max_j = img.shape[1] - half_strel_j - 1
 
-	soma_strel = strEl.sum()
-
-	if( isinstance( img, np.ndarray ) and isinstance( strEl, np.ndarray ) ):
-		if( testaBinario( img ) and testaBinario( strEl ) ):
-			img_final = np.ones( (img.shape[0], img.shape[1]), np.uint8 ) * 255
-			for i in range( half_strel_i, img.shape[0] - half_strel_i - 1 ):
-				for j in range( half_strel_j, it_max_j ):
-					soma_img = 0
-					for k in range( strEl.shape[0] ):
-						for l in range( strEl.shape[1] ):
-							if( img[i+k, j+l] == strEl[k,l] ):
-								soma_img += strEl[k,l]
-					#print(soma_strel, soma_img)
-					if( soma_img != soma_strel ):
-						img_final[i, j] = 0
-			return img_final
 
 """
     MAIN AQUI
 """
+from skimage import morphology as morph
+
 listaImagens = retornaListaArquivos()
-path = listaImagens[1]
+path = listaImagens[13]
 
 #print( path )
 
 img = imread( path )
 img_th = thresh( img, 240 )
-img_er =  erode( img_th, seSquare3() )
-img_di = dilate( img_th, seSquare3() )
 
-compare_images( img_th, img_er, "Original", "Erode" )
-compare_images( img_th, img_di, "Original", "Dilate" )
-compare_images( img_er, img_di, "Erode", "Dilate" )
+img_ero = erode( img, seCross3() )
 
-#print( hist( img ) )
-#print( np.reshape( np.bincount( img.ravel(), minlength=256 ), (256, 1) ).astype(np.uint32) )
+img_dil = dilate( img_th, seCross3() )
+
+
+compare_images( img_ero, img, "Erode", "Erode Referencia" )
+compare_images( img_dil, img, "Dilate", "Dilate Referencia" )
 
 """
 retornaListaArquivos()
