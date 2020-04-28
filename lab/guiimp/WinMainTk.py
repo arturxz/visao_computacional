@@ -160,6 +160,9 @@ class WinMainTk(tk.Frame):
         self.btn_histeq    = tk.Button(self.frame_right, text="histeq",    padx=3, width=BUTTON_WIDTH, command= self.cb_histeq)
         self.btn_blur      = tk.Button(self.frame_right, text="blur",      padx=3, width=BUTTON_WIDTH, command= self.cb_blur)
 
+        self.btn_dilate    = tk.Button(self.frame_right, text="dilate",    padx=3, width=BUTTON_WIDTH, command= self.cb_dilate)
+        self.btn_erode     = tk.Button(self.frame_right, text="erode",     padx=3, width=BUTTON_WIDTH, command= self.cb_erode)
+
         self.btn_kernel    = tk.Button(self.frame_right, text="set convolution kernel",      padx=3, width=BUTTON_WIDTH, command= self.cb_set_kernel)
         
         i = 0
@@ -181,6 +184,11 @@ class WinMainTk(tk.Frame):
         self.btn_histeq.grid(row=i, column=0, ipady=5)
         i = i + 1
         self.btn_blur.grid(row=i, column=0, ipady=5)
+
+        i = i + 1
+        self.btn_dilate.grid(row=i, column=0, ipady=5)
+        i = i + 1
+        self.btn_erode.grid(row=i, column=0, ipady=5)
 
         i = i + 1
         self.btn_kernel.grid(row=i, column=0, ipady=5)
@@ -516,6 +524,26 @@ class WinMainTk(tk.Frame):
     def cb_blur(self):
         image = self.get_image()
         result = my.blur(image)
+        self.set_preview(result)
+        self.ask_confirmation()
+
+    ## Callback: dilate image.
+    #  Callback called when user presses button in toolbox.
+    #  Dilate image in main frame and ask for confirmation.
+    #  @param self The object pointer.
+    def cb_dilate(self):
+        image = self.get_image()
+        result = my.dilate(image, self.strel)
+        self.set_preview(result)
+        self.ask_confirmation()
+
+    ## Callback: erode image.
+    #  Callback called when user presses button in toolbox.
+    #  Erode image in main frame and ask for confirmation.
+    #  @param self The object pointer.
+    def cb_erode(self):
+        image = self.get_image()
+        result = my.erode(image, self.strel)
         self.set_preview(result)
         self.ask_confirmation()
 

@@ -455,7 +455,7 @@ def dilate( img, strEl ):
 """
     MAIN AQUI
 """
-from skimage import morphology as morph
+"""from skimage import morphology as morph
 
 listaImagens = retornaListaArquivos()
 path = listaImagens[13]
@@ -471,7 +471,7 @@ img_dil = dilate( img_th, seCross3() )
 
 
 compare_images( img_ero, img, "Erode", "Erode Referencia" )
-compare_images( img_dil, img, "Dilate", "Dilate Referencia" )
+compare_images( img_dil, img, "Dilate", "Dilate Referencia" )"""
 
 """
 retornaListaArquivos()
