@@ -356,7 +356,6 @@ def seCross3():
 	return mask
 
 def morph_convolve( img, strEl, morph ):
-	print( "erode" )
 	print( "img:", img.shape )
 	print( "str:", strEl.shape )
 	
@@ -445,9 +444,11 @@ def morph_convolve( img, strEl, morph ):
 	return img_final
 
 def erode( img, strEl ):
+	print("erode")
 	return morph_convolve(img, strEl, 'e')
 	
 def dilate( img, strEl ):
+	print("convolve")
 	return morph_convolve(img, strEl, 'd')
 
 
