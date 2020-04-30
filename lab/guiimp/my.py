@@ -451,30 +451,95 @@ def dilate( img, strEl ):
 	print("convolve")
 	return morph_convolve(img, strEl, 'd')
 
+def dft( arr ):
+	if( isinstance( arr, np.ndarray ) ):
+		# GARANTE QUE O ARRAY EH COMPLEXO
+		x = np.asarray( arr, dtype=np.complex )
+		
+		# PREPARA OS VALORES DA SOMATORIA
+		N = arr.shape[0]
+		n = np.arange( N )
+		k = n.reshape( ( N, 1 ) )
+		M = np.exp( -2j * np.pi * k * n / N )
+		
+		# RETORNA A MULTIPLICACAO FINAL
+		return np.dot( M, x )
 
+def idft( arr_fourrier ):
+	if( isinstance( arr_fourrier, np.ndarray ) ):
+		# GARANTE QUE O ARRAY EH COMPLEXO
+		x = np.asarray( arr_fourrier, dtype=np.complex )
+		
+		# PREPARA OS VALORES DA SOMATORIA
+		N = arr_fourrier.shape[0]
+		n = np.arange( N )
+		k = n.reshape( ( N, 1 ) )
+		M = np.exp( 2j * np.pi * k * n / N )
+		
+		# RETORNA A MULTIPLICACAO FINAL
+		return np.dot( M, x )
+
+def dft_img( img ):
+	if( isinstance( img, np.ndarray ) ):
+		if( nchannels( img ) == 1 ):
+			# ENTAO E IMAGEM EH ESCALA DE CINZA
+			img_fourrier = np.zeros( img.shape, dtype=np.complex )
+			for i in range( img.shape[0] ):
+				img_fourrier[i, :] = dft( img[i, :] )
+			
+			for j in range( img.shape[1] ):
+				img_fourrier[:, j] = dft( img_fourrier[:, j] )
+			
+			return img_fourrier
+		elif( nchannels( img ) == 3 ):
+			# ENTAO PARA CADA CANAL DE COR, CHAMA A SI MESMO
+			# COMO SE FOSSE ESCALA DE CINZA
+			img_fourrier = np.zeros( img.shape, dtype=np.complex )
+			for canal in range( 3 ):
+				img_fourrier[:, :, canal] = dft_img( img[:, :, canal] )
+			return img_fourrier
+
+def idft_img( img ):
+	if( isinstance( img, np.ndarray ) ):
+		if( nchannels( img ) == 1 ):
+			# ENTAO E IMAGEM EH ESCALA DE CINZA
+			img_inv_fourrier = np.zeros( img.shape, dtype=np.complex )
+			for i in range( img.shape[0] ):
+				img_inv_fourrier[i, :] = idft( img[i, :] )
+			
+			for j in range( img.shape[1] ):
+				img_inv_fourrier[:, j] = idft( img_inv_fourrier[:, j] )
+			
+			return img_inv_fourrier
+		elif( nchannels( img ) == 3 ):
+			# ENTAO PARA CADA CANAL DE COR, CHAMA A SI MESMO
+			# COMO SE FOSSE ESCALA DE CINZA
+			img_inv_fourrier = np.zeros( img.shape, dtype=np.complex )
+			for canal in range( 3 ):
+				img_inv_fourrier[:, :, canal] = idft_img( img[:, :, canal] )
+			return img_inv_fourrier
 
 """
     MAIN AQUI
 """
-"""from skimage import morphology as morph
 
 listaImagens = retornaListaArquivos()
 path = listaImagens[13]
 
-#print( path )
-
 img = imread( path )
-img_th = thresh( img, 240 )
+img_dft = dft_img( img )
+img_idft = idft_img( img_dft )
 
-img_ero = erode( img, seCross3() )
+print("----------------------------------------")
+print( "Fourrier e inversa sao iguais? --", np.allclose(img_dft, img_idft) )
+print("----------------------------------------")
 
-img_dil = dilate( img_th, seCross3() )
 
-
-compare_images( img_ero, img, "Erode", "Erode Referencia" )
-compare_images( img_dil, img, "Dilate", "Dilate Referencia" )"""
+compare_images( img, img_dft.astype( np.uint8 ), "Imagem Original", "Imagem Fourrier" )
+compare_images( img_dft.astype( np.uint8 ), img_idft.astype( np.uint8 ), "Imagem Fourrier", "Imagem Inversa Fourrier" )
 
 """
+from skimage import morphology as morph
 retornaListaArquivos()
 listaImagens = retornaListaArquivos()
 
@@ -497,8 +562,14 @@ imshow( negative( img ) )
 
 #img_res = convolve( img, maskBlur() )
 
+img_th = thresh( img, 240 )
 
-"""
-"""
+img_ero = erode( img, seCross3() )
+
+img_dil = dilate( img_th, seCross3() )
+
+
+compare_images( img_ero, img, "Erode", "Erode Referencia" )
+compare_images( img_dil, img, "Dilate", "Dilate Referencia" )
 
 """
