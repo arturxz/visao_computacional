@@ -465,21 +465,60 @@ def dft( arr ):
 		# RETORNA A MULTIPLICACAO FINAL
 		return np.dot( M, x )
 
-def idft( arr_fourrier ):
-	if( isinstance( arr_fourrier, np.ndarray ) ):
+def idft( arr ):
+	if( isinstance( arr, np.ndarray ) ):
 		# GARANTE QUE O ARRAY EH COMPLEXO
-		x = np.asarray( arr_fourrier, dtype=np.complex )
+		x = np.asarray( arr, dtype=np.complex )
 		
 		# PREPARA OS VALORES DA SOMATORIA
-		N = arr_fourrier.shape[0]
+		N = arr.shape[0]
 		n = np.arange( N )
 		k = n.reshape( ( N, 1 ) )
 		M = np.exp( 2j * np.pi * k * n / N )
 		
 		# RETORNA A MULTIPLICACAO FINAL
-		return np.dot( M, x )
+		return 1 / N * np.dot( M, x )
 
-def dft_img( img ):
+def fft( arr ):
+	if( isinstance( arr, np.ndarray ) ):
+		x = np.asarray( arr, dtype=np.complex )
+		N = x.shape[0]
+
+		if( N % 2 > 0 ):
+			# FAZER PREENCHIMENTO DA IMAGEM (AINDA NAO FAZ)
+			print( arr.shape )
+			raise ValueError( "Precisa ser potência de 2" )
+		elif( N <= 2 ):
+			return dft( arr ) # CASO BASE DA RECURSAO
+		else:
+			X_pares = fft( x[ ::2 ] ) # COMPUTA OS PARES
+			X_impar = fft( x[ 1::2 ] ) # COMPUTA OS IMPARES
+			terms = np.exp( -2j * np.pi * np.arange( N ) / N ) # PREPARA O EXPONENCIAL
+
+			fu = X_pares + terms[ :int( N/2 ) ] * X_impar # CALCULA f(u)
+			fu_k = X_pares + terms[ int( N/2 ): ] * X_impar # CALCULA f(u) + k
+
+			return np.concatenate( [ fu, fu_k ] )
+
+def ifft( arr_fourrier ):
+	if( isinstance( arr_fourrier, np.ndarray ) ):
+		# GARANTINDO QUE O ARRAY EH DE COMPLEXOS
+		arr = np.asarray( arr_fourrier, dtype=np.complex )
+
+		# RETORNA A CONJUGAÇÃO DA PARTE IMAGINARIA
+		arr_fourrier_conjugate = np.conjugate( arr_fourrier )
+		
+		# CALCULA O FOURRIER DO ARRAY CONJUGADO
+		arr = fft( arr_fourrier_conjugate )
+		
+		# RECONJUGANDO
+		arr = np.conjugate( arr )
+
+		# DIVISAO POR M
+		arr = arr / arr_fourrier.shape[0]
+		return arr
+
+def dft_2d( img ):
 	if( isinstance( img, np.ndarray ) ):
 		if( nchannels( img ) == 1 ):
 			# ENTAO E IMAGEM EH ESCALA DE CINZA
@@ -491,54 +530,162 @@ def dft_img( img ):
 				img_fourrier[:, j] = dft( img_fourrier[:, j] )
 			
 			return img_fourrier
-		elif( nchannels( img ) == 3 ):
+		elif( nchannels( img ) > 1 ):
 			# ENTAO PARA CADA CANAL DE COR, CHAMA A SI MESMO
 			# COMO SE FOSSE ESCALA DE CINZA
 			img_fourrier = np.zeros( img.shape, dtype=np.complex )
 			for canal in range( 3 ):
-				img_fourrier[:, :, canal] = dft_img( img[:, :, canal] )
+				img_fourrier[:, :, canal] = dft_2d( img[:, :, canal] )
 			return img_fourrier
 
-def idft_img( img ):
+def idft_2d( img ):
 	if( isinstance( img, np.ndarray ) ):
 		if( nchannels( img ) == 1 ):
 			# ENTAO E IMAGEM EH ESCALA DE CINZA
 			img_inv_fourrier = np.zeros( img.shape, dtype=np.complex )
-			for i in range( img.shape[0] ):
-				img_inv_fourrier[i, :] = idft( img[i, :] )
-			
 			for j in range( img.shape[1] ):
-				img_inv_fourrier[:, j] = idft( img_inv_fourrier[:, j] )
+				img_inv_fourrier[:, j] = np.fft.ifft( img[:, j] )
+
+			for i in range( img.shape[0] ):
+				img_inv_fourrier[i, :] = np.fft.ifft( img_inv_fourrier[i, :] )
 			
 			return img_inv_fourrier
-		elif( nchannels( img ) == 3 ):
+		elif( nchannels( img ) > 1 ):
 			# ENTAO PARA CADA CANAL DE COR, CHAMA A SI MESMO
 			# COMO SE FOSSE ESCALA DE CINZA
 			img_inv_fourrier = np.zeros( img.shape, dtype=np.complex )
 			for canal in range( 3 ):
-				img_inv_fourrier[:, :, canal] = idft_img( img[:, :, canal] )
+				img_inv_fourrier[:, :, canal] = idft_2d( img[:, :, canal] )
+			return img_inv_fourrier
+
+def fft_2d( arr ):
+	if( isinstance( arr, np.ndarray ) ):
+		arr_fourrier = np.asarray( arr, dtype=np.complex )
+		if( nchannels( arr ) == 1 ):
+			for i in range( arr.shape[ 0 ] ):
+				arr_fourrier[i, :] = fft( arr[i, :] ) # FAZENDO PARA EIXO X
+			
+			for j in range( arr.shape[ 1 ] ):
+				arr_fourrier[:, j] = fft( arr_fourrier[:, j] ) # FAZENDO PARA EIXO Y
+		elif( nchannels( arr ) == 3 ):
+			for canal in range( 3 ):
+				arr_fourrier[:, :, canal] = fft_2d( arr[:, :, canal] ) # FAZENDO PARA CADA CANAL DE COR
+		
+		return arr_fourrier
+
+def ifft_2d( arr_fourrier ):
+	if( isinstance( arr_fourrier, np.ndarray ) ):
+		arr = np.asarray( arr_fourrier, dtype=np.complex )
+		if( nchannels( arr_fourrier ) == 1 ):
+			for i in range( arr_fourrier.shape[0] ):
+				arr[i, :] = ifft( arr_fourrier[i, :] ) # FAZENDO PARA EIXO X
+			
+			for j in range( arr_fourrier.shape[1] ):
+				arr[:, j] = ifft( arr[:, j] ) # FAZENDO PARA EIXO Y
+		elif( nchannels( arr_fourrier ) == 3 ):
+			for canal in range( 3 ):
+				arr[:, :, canal] = ifft_2d( arr[:, :, canal] ) # FAZENDO PARA CADA CANAL DE COR
+		
+		return arr
+
+def fft_2d_np( img ):
+	if( isinstance( img, np.ndarray ) ):
+		if( nchannels( img ) == 1 ):
+			# ENTAO E IMAGEM EH ESCALA DE CINZA
+			img_fourrier = np.zeros( img.shape, dtype=np.complex )
+			for i in range( img.shape[0] ):
+				img_fourrier[i, :] = np.fft.fft( img[i, :] )
+			
+			for j in range( img.shape[1] ):
+				img_fourrier[:, j] = np.fft.fft( img_fourrier[:, j] )
+			
+			return img_fourrier
+		elif( nchannels( img ) > 1 ):
+			# ENTAO PARA CADA CANAL DE COR, CHAMA A SI MESMO
+			# COMO SE FOSSE ESCALA DE CINZA
+			img_fourrier = np.zeros( img.shape, dtype=np.complex )
+			for canal in range( 3 ):
+				img_fourrier[:, :, canal] = fft_2d_np( img[:, :, canal] )
+			return img_fourrier
+
+def ifft_2d_np( img ):
+	if( isinstance( img, np.ndarray ) ):
+		if( nchannels( img ) == 1 ):
+			# ENTAO E IMAGEM EH ESCALA DE CINZA
+			img_inv_fourrier = np.zeros( img.shape, dtype=np.complex )
+			for j in range( img.shape[1] ):
+				img_inv_fourrier[:, j] = np.fft.ifft( img[:, j] )
+
+			for i in range( img.shape[0] ):
+				img_inv_fourrier[i, :] = np.fft.ifft( img_inv_fourrier[i, :] )
+
+			return img_inv_fourrier
+		elif( nchannels( img ) > 1 ):
+			# ENTAO PARA CADA CANAL DE COR, CHAMA A SI MESMO
+			# COMO SE FOSSE ESCALA DE CINZA
+			img_inv_fourrier = np.zeros( img.shape, dtype=np.complex )
+			for canal in range( 3 ):
+				img_inv_fourrier[:, :, canal] = ifft_2d_np( img[:, :, canal] )
 			return img_inv_fourrier
 
 """
     MAIN AQUI
 """
 
-listaImagens = retornaListaArquivos()
-path = listaImagens[13]
+listaImagens = retornaListaArquivos( "C:\\Users\\artur\\Google Drive\\UFS\\Mestrado\\[2020.1] Periodo 1\\COMPU0026 - VISAO COMPUTACIONAL\\lab\\guiimp\\img_fft" )
+path = listaImagens[1]
 
 img = imread( path )
-img_dft = dft_img( img )
-img_idft = idft_img( img_dft )
+print( "shape da imagem:", img.shape, "\n" )
 
-print("----------------------------------------")
-print( "Fourrier e inversa sao iguais? --", np.allclose(img_dft, img_idft) )
-print("----------------------------------------")
+ini = t.time()
+img_fft = fft_2d( img )
+print( "Tempo Execução Fourrier FFT:", t.time()-ini )
 
+ini = t.time()
+img_ifft = ifft_2d( img_fft )
+print( "Tempo Execução Fourrier Inversa iFFT:", t.time()-ini )
 
-compare_images( img, img_dft.astype( np.uint8 ), "Imagem Original", "Imagem Fourrier" )
-compare_images( img_dft.astype( np.uint8 ), img_idft.astype( np.uint8 ), "Imagem Fourrier", "Imagem Inversa Fourrier" )
+print( "ori, fft:", np.allclose( img, img_ifft ) )
+print( "fft, ift:", np.allclose( img_fft, img_ifft ) )
+
+img_fft = np.real( img_fft ).astype( np.uint8 )
+img_ifft = np.real( img_ifft ).astype( np.uint8 )
+
+compare_images( img, img_fft, "Imagem Original", "Imagem Fourrier" )
+compare_images( img_fft, img_ifft, "Imagem Fourrier", "Imagem Inversa Fourrier" )
 
 """
+ini = t.time()
+img_idft = idft_2d( img_dft )
+print( "Tempo Execução Inversa Fourrier:", t.time()-ini )
+
+ini = t.time()
+img_idft_np = idft_2d_np( img_dft )
+print( "Tempo Execução Inversa Fourrier Numpy:", t.time()-ini )
+
+print( "Fourrier Inversa tá ok?", np.allclose( img_idft_np, img_idft ), "\n" )
+
+img_dft = img_dft.astype( np.uint8 )
+img_idft = img_idft.astype( np.uint8 )
+img_idft_np = img_idft_np.astype( np.uint8 )
+
+compare_images( img, img_dft, "Imagem Original", "Imagem Fourrier" )
+compare_images( img_dft, img_idft, "Imagem Fourrier", "Imagem Inversa Fourrier" )
+compare_images( img_idft, img_idft_np, "Minha", "Numpy" )
+"""
+
+
+
+
+
+
+
+"""
+	---------------------------------
+	EXEMPLOS DE COMO USAR OS METODOS
+	---------------------------------
+
 from skimage import morphology as morph
 retornaListaArquivos()
 listaImagens = retornaListaArquivos()
