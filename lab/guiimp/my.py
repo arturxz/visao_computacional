@@ -5,7 +5,7 @@ import time as t
 import matplotlib.pyplot as mp
 
 from PIL import Image
-from math import floor
+from math import floor, ceil, log
 
 def retornaListaArquivos( path=None ):
 	
@@ -51,11 +51,11 @@ def nchannels( img ):
 	else:
 		return -1
 
-def compare_images( img1, img2, sub1="Imagem 1", sub2="Imagem 2"):
+def compare_images( img1, img2, sub1="Imagem 1", sub2="Imagem 2", titulo="Comparando Imagens" ):
 	mp.subplot( 2, 1, 1 )
 	plt1 = mp.imshow(img1, cmap=mp.gray(), origin="upper", vmin=0, vmax=255)
 	plt1.set_interpolation('nearest')
-	mp.title( "Comparando Imagens" )
+	mp.title( titulo )
 	mp.ylabel( sub1 )
 	
 	mp.subplot( 2, 1, 2 )
@@ -480,43 +480,87 @@ def idft( arr ):
 		return 1 / N * np.dot( M, x )
 
 def fft( arr ):
-	if( isinstance( arr, np.ndarray ) ):
-		x = np.asarray( arr, dtype=np.complex )
-		N = x.shape[0]
+	arr = np.asarray( arr, dtype=np.complex )
+	N = arr.shape[0]
 
-		if( N % 2 > 0 ):
-			# FAZER PREENCHIMENTO DA IMAGEM (AINDA NAO FAZ)
-			print( arr.shape )
-			raise ValueError( "Precisa ser potência de 2" )
-		elif( N <= 2 ):
-			return dft( arr ) # CASO BASE DA RECURSAO
-		else:
-			X_pares = fft( x[ ::2 ] ) # COMPUTA OS PARES
-			X_impar = fft( x[ 1::2 ] ) # COMPUTA OS IMPARES
-			terms = np.exp( -2j * np.pi * np.arange( N ) / N ) # PREPARA O EXPONENCIAL
+	"""
+	if( N % 2 != 0 ):
+		# FAZER PREENCHIMENTO DA IMAGEM (AINDA NAO FAZ)
+		print( arr.shape )
+		raise ValueError( "Precisa ser potência de 2" )
+	"""
+	
+	if( N <= 16 ):
+		return dft( arr ) # CASO BASE DA RECURSAO
+	else:
+		metade_pares = fft( arr[::2] ) # COMPUTA PRIMEIRA METADE
+		metade_impar = fft( arr[1::2] ) # COMPUTA SEGUNDA METADE
+		exponencial = np.exp( -2j * np.pi * np.arange( N ) / N ) # PREPARA O EXPONENCIAL
 
-			fu = X_pares + terms[ :int( N/2 ) ] * X_impar # CALCULA f(u)
-			fu_k = X_pares + terms[ int( N/2 ): ] * X_impar # CALCULA f(u) + k
+		fu = metade_pares + metade_impar * exponencial[ :int(N//2) ]
+		fu_k = metade_pares + metade_impar * exponencial[ int(N//2): ]
 
-			return np.concatenate( [ fu, fu_k ] )
+		return np.concatenate( [ fu, fu_k ] )
+
+def maior_potencia_2_mais_proxima( n ):
+	i = 0
+	while( n != 0 ):
+		n = n >> 1
+		i = i + 1
+	
+	return 1 << (i-1)
+
+def pre_fft( arr ):
+	tam = arr.shape[0]
+
+	if( tam <= 16 ):
+		return dft( arr )
+	elif( tam and not( tam & (tam-1) )  ):
+		# MESMO CASO BASE DO FFT
+		return fft( arr ) # TAMANHO DO ARRAY POTENCIA DE DOIS		
+	else:
+		pot2 = maior_potencia_2_mais_proxima( tam )
+		arr_fft = fft( arr[0:pot2] )
+		arr_dft = dft( arr[pot2:tam] )
+
+		return np.concatenate( [ arr_dft, arr_fft ] )
+
+def czt( x ):
+	# Translated from GNU Octave's czt.m
+	n = len(x)
+	m = n
+	a = 1
+	
+	N2 = maior_potencia_2_mais_proxima( tam )
+
+	
+	w = np.exp( -2j * np.pi / m )
+
+	chirp = w ** ( np.arange(1 - n, max(m, n)) ** 2 / 2.0 )
+	xp = np.append(x * a ** -np.arange(n) * chirp[n - 1 : n + n - 1], np.zeros(N2 - n))
+	ichirpp = np.append(1 / chirp[: m + n - 1], np.zeros(N2 - (m + n - 1)))
+	
+	r = ifft(fft(xp) * fft(ichirpp))
+	return r[n - 1 : m + n - 1] * chirp[n - 1 : m + n - 1]
+
+
 
 def ifft( arr_fourrier ):
-	if( isinstance( arr_fourrier, np.ndarray ) ):
-		# GARANTINDO QUE O ARRAY EH DE COMPLEXOS
-		arr = np.asarray( arr_fourrier, dtype=np.complex )
+	# GARANTINDO QUE O ARRAY SEJA DE COMPLEXOS
+	arr = np.asarray( arr_fourrier, dtype=np.complex )
 
-		# RETORNA A CONJUGAÇÃO DA PARTE IMAGINARIA
-		arr_fourrier_conjugate = np.conjugate( arr_fourrier )
+	# RETORNA A CONJUGAÇÃO DA PARTE IMAGINARIA
+	arr_fourrier_conjugate = np.conjugate( arr_fourrier )
 		
-		# CALCULA O FOURRIER DO ARRAY CONJUGADO
-		arr = fft( arr_fourrier_conjugate )
+	# CALCULA O FOURRIER DO ARRAY CONJUGADO
+	arr = pre_fft( arr_fourrier_conjugate )
 		
-		# RECONJUGANDO
-		arr = np.conjugate( arr )
+	# RECONJUGANDO
+	arr = np.conjugate( arr )
 
-		# DIVISAO POR M
-		arr = arr / arr_fourrier.shape[0]
-		return arr
+	# DIVISAO POR M
+	arr = arr / arr_fourrier.shape[0]
+	return arr
 
 def dft_2d( img ):
 	if( isinstance( img, np.ndarray ) ):
@@ -558,35 +602,46 @@ def idft_2d( img ):
 				img_inv_fourrier[:, :, canal] = idft_2d( img[:, :, canal] )
 			return img_inv_fourrier
 
-def fft_2d( arr ):
-	if( isinstance( arr, np.ndarray ) ):
-		arr_fourrier = np.asarray( arr, dtype=np.complex )
-		if( nchannels( arr ) == 1 ):
-			for i in range( arr.shape[ 0 ] ):
-				arr_fourrier[i, :] = fft( arr[i, :] ) # FAZENDO PARA EIXO X
+def fft_2d( img ):
+	if( isinstance( img, np.ndarray ) ):
+		if( nchannels( img ) == 1 ):
+			# ENTAO E IMAGEM EH ESCALA DE CINZA
+			img_fourrier = np.zeros( img.shape, dtype=np.complex )
+			for i in range( img.shape[0] ):
+				img_fourrier[i, :] = pre_fft( img[i, :] )
 			
-			for j in range( arr.shape[ 1 ] ):
-				arr_fourrier[:, j] = fft( arr_fourrier[:, j] ) # FAZENDO PARA EIXO Y
-		elif( nchannels( arr ) == 3 ):
+			for j in range( img.shape[1] ):
+				img_fourrier[:, j] = pre_fft( img_fourrier[:, j] )
+			
+			return img_fourrier
+		elif( nchannels( img ) > 1 ):
+			# ENTAO PARA CADA CANAL DE COR, CHAMA A SI MESMO
+			# COMO SE FOSSE ESCALA DE CINZA
+			img_fourrier = np.zeros( img.shape, dtype=np.complex )
 			for canal in range( 3 ):
-				arr_fourrier[:, :, canal] = fft_2d( arr[:, :, canal] ) # FAZENDO PARA CADA CANAL DE COR
-		
-		return arr_fourrier
+				img_fourrier[:, :, canal] = fft_2d( img[:, :, canal] )
+			return img_fourrier
 
-def ifft_2d( arr_fourrier ):
-	if( isinstance( arr_fourrier, np.ndarray ) ):
-		arr = np.asarray( arr_fourrier, dtype=np.complex )
-		if( nchannels( arr_fourrier ) == 1 ):
-			for i in range( arr_fourrier.shape[0] ):
-				arr[i, :] = ifft( arr_fourrier[i, :] ) # FAZENDO PARA EIXO X
+
+def ifft_2d( img ):
+	if( isinstance( img, np.ndarray ) ):
+		if( nchannels( img ) == 1 ):
+			# ENTAO E IMAGEM EH ESCALA DE CINZA
+			img_fourrier = np.zeros( img.shape, dtype=np.complex )
+			for i in range( img.shape[0] ):
+				img_fourrier[i, :] = ifft( img[i, :] )
 			
-			for j in range( arr_fourrier.shape[1] ):
-				arr[:, j] = ifft( arr[:, j] ) # FAZENDO PARA EIXO Y
-		elif( nchannels( arr_fourrier ) == 3 ):
+			for j in range( img.shape[1] ):
+				img_fourrier[:, j] = ifft( img_fourrier[:, j] )
+			
+			return img_fourrier
+		elif( nchannels( img ) > 1 ):
+			# ENTAO PARA CADA CANAL DE COR, CHAMA A SI MESMO
+			# COMO SE FOSSE ESCALA DE CINZA
+			img_fourrier = np.zeros( img.shape, dtype=np.complex )
 			for canal in range( 3 ):
-				arr[:, :, canal] = ifft_2d( arr[:, :, canal] ) # FAZENDO PARA CADA CANAL DE COR
-		
-		return arr
+				img_fourrier[:, :, canal] = ifft_2d( img[:, :, canal] )
+			return img_fourrier
 
 def fft_2d_np( img ):
 	if( isinstance( img, np.ndarray ) ):
@@ -633,27 +688,44 @@ def ifft_2d_np( img ):
 """
 
 listaImagens = retornaListaArquivos( "C:\\Users\\artur\\Google Drive\\UFS\\Mestrado\\[2020.1] Periodo 1\\COMPU0026 - VISAO COMPUTACIONAL\\lab\\guiimp\\img_fft" )
-path = listaImagens[1]
+path = listaImagens[0]
 
 img = imread( path )
 print( "shape da imagem:", img.shape, "\n" )
 
+########## EXECUCOES DOS MEUS ##########
+
 ini = t.time()
 img_fft = fft_2d( img )
-print( "Tempo Execução Fourrier FFT:", t.time()-ini )
+print( "Tempo Execução FFT: ", t.time()-ini )
 
 ini = t.time()
 img_ifft = ifft_2d( img_fft )
-print( "Tempo Execução Fourrier Inversa iFFT:", t.time()-ini )
+print( "Tempo Execução iFFT:", t.time()-ini, "\n" )
 
-print( "ori, fft:", np.allclose( img, img_ifft ) )
-print( "fft, ift:", np.allclose( img_fft, img_ifft ) )
+########## EXECUCOES DO NUMPY ##########
+
+ini = t.time()
+img_fft_np = fft_2d_np( img )
+print( "Tempo Execução FFT Numpy: ", t.time()-ini )
+
+ini = t.time()
+img_ifft_np = ifft_2d_np( img_fft_np )
+print( "Tempo Execução iFFT Numpy:", t.time()-ini, "\n" )
+
+########## COMPARACOES ##########
+
+print( "FFT: ", np.allclose( img_fft,  img_fft_np ) )
+print( "iFFT:", np.allclose( img_ifft, img_ifft_np ), "\n" )
 
 img_fft = np.real( img_fft ).astype( np.uint8 )
 img_ifft = np.real( img_ifft ).astype( np.uint8 )
 
-compare_images( img, img_fft, "Imagem Original", "Imagem Fourrier" )
-compare_images( img_fft, img_ifft, "Imagem Fourrier", "Imagem Inversa Fourrier" )
+img_fft_np = np.real( img_fft_np ).astype( np.uint8 )
+img_ifft_np = np.real( img_ifft_np ).astype( np.uint8 )
+
+compare_images( img_fft, img_fft_np, "Meu", "Numpy", "Comparação FFT" )
+compare_images( img_ifft, img_ifft_np, "Meu", "Numpy", "Comparação iFFT" )
 
 """
 ini = t.time()
