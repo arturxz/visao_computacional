@@ -368,9 +368,9 @@ def morph_convolve( img, strEl, morph ):
 		if( is_gray_image( img ) ):
 			for i in range( img.shape[0] ):
 				for j in range( img.shape[1] ):
-					if( morph == 'e' ): #erosion
+					if( morph == 'e' ): # erosao
 						controle = 255
-					elif( morph == 'd' ): #dilatation
+					elif( morph == 'd' ): #dilatacao
 						controle = 0
 					for k in range( -half_strel_i, half_strel_i+1):
 						for l in range( -half_strel_j, half_strel_j+1 ):
@@ -388,21 +388,21 @@ def morph_convolve( img, strEl, morph ):
 								elif( idx_img_j < 0 ):
 									idx_img_j = 0
 
-								if( morph == 'e' ): #erosion
+								if( morph == 'e' ): # erosao
 									if( img[idx_img_i, idx_img_j] < controle ):
 										controle = img[idx_img_i, idx_img_j]
-								elif( morph == 'd' ): #dilatation
+								elif( morph == 'd' ): #dilatacao
 									if( img[idx_img_i, idx_img_j] > controle ):
 										controle = img[idx_img_i, idx_img_j]
 					img_final[i,j] = controle
 		else:
 			for i in range( img.shape[0] ):
 				for j in range( img.shape[1] ):
-					if( morph == 'e' ): #erosion
+					if( morph == 'e' ): # erosao
 						controle_r = 255
 						controle_g = 255
 						controle_b = 255
-					elif( morph == 'd' ): #dilatation
+					elif( morph == 'd' ): #dilatacao
 						controle_r = 0
 						controle_g = 0
 						controle_b = 0
@@ -422,14 +422,14 @@ def morph_convolve( img, strEl, morph ):
 								elif( idx_img_j < 0 ):
 									idx_img_j = 0
 
-								if( morph == 'e' ): #erosion
+								if( morph == 'e' ): # erosao
 									if( img[idx_img_i, idx_img_j, 0] < controle_r ):
 										controle_r = img[idx_img_i, idx_img_j, 0]
 									if( img[idx_img_i, idx_img_j, 1] < controle_g ):
 										controle_g = img[idx_img_i, idx_img_j, 1]
 									if( img[idx_img_i, idx_img_j, 2] < controle_b ):
 										controle_b = img[idx_img_i, idx_img_j, 2]
-								elif( morph == 'd' ): #dilatation
+								elif( morph == 'd' ): # dilatacao
 									if( img[idx_img_i, idx_img_j, 0] > controle_r ):
 										controle_r = img[idx_img_i, idx_img_j, 0]
 									if( img[idx_img_i, idx_img_j, 1] > controle_g ):
@@ -479,16 +479,25 @@ def idft( arr ):
 		# RETORNA A MULTIPLICACAO FINAL
 		return 1 / N * np.dot( M, x )
 
+def maior_potencia_2_mais_proxima( n ):
+	i = 0
+	while( n != 0 ):
+		n = n >> 1
+		i = i + 1
+	
+	return 1 << i
+
+def eh_potencia_de_2( n ):
+	return n and not( n & (n-1) )
+
 def fft( arr ):
 	arr = np.asarray( arr, dtype=np.complex )
 	N = arr.shape[0]
 
-	"""
-	if( N % 2 != 0 ):
+	if( not eh_potencia_de_2( N ) ):
 		# FAZER PREENCHIMENTO DA IMAGEM (AINDA NAO FAZ)
 		print( arr.shape )
 		raise ValueError( "Precisa ser potência de 2" )
-	"""
 	
 	if( N <= 16 ):
 		return dft( arr ) # CASO BASE DA RECURSAO
@@ -502,58 +511,15 @@ def fft( arr ):
 
 		return np.concatenate( [ fu, fu_k ] )
 
-def maior_potencia_2_mais_proxima( n ):
-	i = 0
-	while( n != 0 ):
-		n = n >> 1
-		i = i + 1
-	
-	return 1 << (i-1)
-
-def pre_fft( arr ):
-	tam = arr.shape[0]
-
-	if( tam <= 16 ):
-		return dft( arr )
-	elif( tam and not( tam & (tam-1) )  ):
-		# MESMO CASO BASE DO FFT
-		return fft( arr ) # TAMANHO DO ARRAY POTENCIA DE DOIS		
-	else:
-		pot2 = maior_potencia_2_mais_proxima( tam )
-		arr_fft = fft( arr[0:pot2] )
-		arr_dft = dft( arr[pot2:tam] )
-
-		return np.concatenate( [ arr_dft, arr_fft ] )
-
-def czt( x ):
-	# Translated from GNU Octave's czt.m
-	n = len(x)
-	m = n
-	a = 1
-	
-	N2 = maior_potencia_2_mais_proxima( tam )
-
-	
-	w = np.exp( -2j * np.pi / m )
-
-	chirp = w ** ( np.arange(1 - n, max(m, n)) ** 2 / 2.0 )
-	xp = np.append(x * a ** -np.arange(n) * chirp[n - 1 : n + n - 1], np.zeros(N2 - n))
-	ichirpp = np.append(1 / chirp[: m + n - 1], np.zeros(N2 - (m + n - 1)))
-	
-	r = ifft(fft(xp) * fft(ichirpp))
-	return r[n - 1 : m + n - 1] * chirp[n - 1 : m + n - 1]
-
-
-
 def ifft( arr_fourrier ):
 	# GARANTINDO QUE O ARRAY SEJA DE COMPLEXOS
 	arr = np.asarray( arr_fourrier, dtype=np.complex )
 
 	# RETORNA A CONJUGAÇÃO DA PARTE IMAGINARIA
-	arr_fourrier_conjugate = np.conjugate( arr_fourrier )
+	arr = np.conjugate( arr_fourrier )
 		
 	# CALCULA O FOURRIER DO ARRAY CONJUGADO
-	arr = pre_fft( arr_fourrier_conjugate )
+	arr = fft( arr )
 		
 	# RECONJUGANDO
 	arr = np.conjugate( arr )
@@ -608,10 +574,10 @@ def fft_2d( img ):
 			# ENTAO E IMAGEM EH ESCALA DE CINZA
 			img_fourrier = np.zeros( img.shape, dtype=np.complex )
 			for i in range( img.shape[0] ):
-				img_fourrier[i, :] = pre_fft( img[i, :] )
+				img_fourrier[i, :] = fft( img[i, :] )
 			
 			for j in range( img.shape[1] ):
-				img_fourrier[:, j] = pre_fft( img_fourrier[:, j] )
+				img_fourrier[:, j] = fft( img_fourrier[:, j] )
 			
 			return img_fourrier
 		elif( nchannels( img ) > 1 ):
@@ -687,8 +653,9 @@ def ifft_2d_np( img ):
     MAIN AQUI
 """
 
-listaImagens = retornaListaArquivos( "C:\\Users\\artur\\Google Drive\\UFS\\Mestrado\\[2020.1] Periodo 1\\COMPU0026 - VISAO COMPUTACIONAL\\lab\\guiimp\\img_fft" )
-path = listaImagens[0]
+#listaImagens = retornaListaArquivos( "C:\\Users\\artur\\Google Drive\\UFS\\Mestrado\\[2020.1] Periodo 1\\COMPU0026 - VISAO COMPUTACIONAL\\lab\\guiimp\\img_fft" )
+listaImagens = retornaListaArquivos( "C:\\Users\\asnascimento\\Documents\\Mestrado\\visao_computacional\\lab\\lab_fft\\img" )
+path = listaImagens[1]
 
 img = imread( path )
 print( "shape da imagem:", img.shape, "\n" )
@@ -699,33 +666,16 @@ ini = t.time()
 img_fft = fft_2d( img )
 print( "Tempo Execução FFT: ", t.time()-ini )
 
+img_fft = erode( img_fft, seSquare3() )
+
 ini = t.time()
 img_ifft = ifft_2d( img_fft )
 print( "Tempo Execução iFFT:", t.time()-ini, "\n" )
 
-########## EXECUCOES DO NUMPY ##########
-
-ini = t.time()
-img_fft_np = fft_2d_np( img )
-print( "Tempo Execução FFT Numpy: ", t.time()-ini )
-
-ini = t.time()
-img_ifft_np = ifft_2d_np( img_fft_np )
-print( "Tempo Execução iFFT Numpy:", t.time()-ini, "\n" )
-
-########## COMPARACOES ##########
-
-print( "FFT: ", np.allclose( img_fft,  img_fft_np ) )
-print( "iFFT:", np.allclose( img_ifft, img_ifft_np ), "\n" )
-
 img_fft = np.real( img_fft ).astype( np.uint8 )
 img_ifft = np.real( img_ifft ).astype( np.uint8 )
 
-img_fft_np = np.real( img_fft_np ).astype( np.uint8 )
-img_ifft_np = np.real( img_ifft_np ).astype( np.uint8 )
-
-compare_images( img_fft, img_fft_np, "Meu", "Numpy", "Comparação FFT" )
-compare_images( img_ifft, img_ifft_np, "Meu", "Numpy", "Comparação iFFT" )
+compare_images( erode( img, seSquare3() ), img_ifft, "Imagem Dilatada", "Imagem Dilatada em Fourrier", "Comparação FFT" )
 
 """
 ini = t.time()
@@ -792,3 +742,48 @@ compare_images( img_ero, img, "Erode", "Erode Referencia" )
 compare_images( img_dil, img, "Dilate", "Dilate Referencia" )
 
 """
+
+"""
+    ---------------------
+	  TESTES FFT E iFFT
+	---------------------
+#listaImagens = retornaListaArquivos( "C:\\Users\\artur\\Google Drive\\UFS\\Mestrado\\[2020.1] Periodo 1\\COMPU0026 - VISAO COMPUTACIONAL\\lab\\guiimp\\img_fft" )
+listaImagens = retornaListaArquivos( "C:\\Users\\asnascimento\\Documents\\Mestrado\\visao_computacional\\lab\\lab_fft\\img" )
+path = listaImagens[1]
+
+img = imread( path )
+print( "shape da imagem:", img.shape, "\n" )
+
+########## EXECUCOES DOS MEUS ##########
+
+ini = t.time()
+img_fft = fft_2d( img )
+print( "Tempo Execução FFT: ", t.time()-ini )
+
+ini = t.time()
+img_ifft = ifft_2d( img_fft )
+print( "Tempo Execução iFFT:", t.time()-ini, "\n" )
+
+########## EXECUCOES DO NUMPY ##########
+
+ini = t.time()
+img_fft_np = fft_2d_np( img )
+print( "Tempo Execução FFT Numpy: ", t.time()-ini )
+
+ini = t.time()
+img_ifft_np = ifft_2d_np( img_fft_np )
+print( "Tempo Execução iFFT Numpy:", t.time()-ini, "\n" )
+
+########## COMPARACOES ##########
+
+print( "FFT: ", np.allclose( img_fft,  img_fft_np ) )
+print( "iFFT:", np.allclose( img_ifft, img_ifft_np ), "\n" )
+
+img_fft = np.real( img_fft ).astype( np.uint8 )
+img_ifft = np.real( img_ifft ).astype( np.uint8 )
+
+img_fft_np = np.real( img_fft_np ).astype( np.uint8 )
+img_ifft_np = np.real( img_ifft_np ).astype( np.uint8 )
+
+compare_images( img_fft, img_fft_np, "Meu", "Numpy", "Comparação FFT" )
+compare_images( img_ifft, img_ifft_np, "Meu", "Numpy", "Comparação iFFT" )"""

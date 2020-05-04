@@ -24,6 +24,8 @@ import my
 import math as m
 import os
 
+import numpy as np
+
 from PIL import Image
 from PIL import ImageTk
 
@@ -148,50 +150,63 @@ class WinMainTk(tk.Frame):
 
         BUTTON_WIDTH = 20
 
-        self.btn_nchannels = tk.Button(self.frame_right, text="nchannels", padx=3, width=BUTTON_WIDTH, command= self.cb_nchannels)
-        self.btn_size      = tk.Button(self.frame_right, text="size",      padx=3, width=BUTTON_WIDTH, command= self.cb_size)
+        self.btn_nchannels = tk.Button(self.frame_right, text="nchannels", padx=3, width=BUTTON_WIDTH, command=self.cb_nchannels)
+        self.btn_size      = tk.Button(self.frame_right, text="size",      padx=3, width=BUTTON_WIDTH, command=self.cb_size)
 
-        self.btn_rgb2gray  = tk.Button(self.frame_right, text="rgb2gray",  padx=3, width=BUTTON_WIDTH, command= self.cb_rgb2gray)
-        self.btn_thresh    = tk.Button(self.frame_right, text="thresh",    padx=3, width=BUTTON_WIDTH, command= self.cb_thresh)
+        self.btn_rgb2gray  = tk.Button(self.frame_right, text="rgb2gray",  padx=3, width=BUTTON_WIDTH, command=self.cb_rgb2gray)
+        self.btn_thresh    = tk.Button(self.frame_right, text="thresh",    padx=3, width=BUTTON_WIDTH, command=self.cb_thresh)
 
-        self.btn_negative  = tk.Button(self.frame_right, text="negative",  padx=3, width=BUTTON_WIDTH, command= self.cb_negative)
-        self.btn_contrast  = tk.Button(self.frame_right, text="contrast",  padx=3, width=BUTTON_WIDTH, command= self.cb_contrast)
+        self.btn_negative  = tk.Button(self.frame_right, text="negative",  padx=3, width=BUTTON_WIDTH, command=self.cb_negative)
+        self.btn_contrast  = tk.Button(self.frame_right, text="contrast",  padx=3, width=BUTTON_WIDTH, command=self.cb_contrast)
 
-        self.btn_histeq    = tk.Button(self.frame_right, text="histeq",    padx=3, width=BUTTON_WIDTH, command= self.cb_histeq)
-        self.btn_blur      = tk.Button(self.frame_right, text="blur",      padx=3, width=BUTTON_WIDTH, command= self.cb_blur)
+        self.btn_histeq    = tk.Button(self.frame_right, text="histeq",    padx=3, width=BUTTON_WIDTH, command=self.cb_histeq)
+        self.btn_blur      = tk.Button(self.frame_right, text="blur",      padx=3, width=BUTTON_WIDTH, command=self.cb_blur)
 
-        self.btn_dilate    = tk.Button(self.frame_right, text="dilate",    padx=3, width=BUTTON_WIDTH, command= self.cb_dilate)
-        self.btn_erode     = tk.Button(self.frame_right, text="erode",     padx=3, width=BUTTON_WIDTH, command= self.cb_erode)
+        self.btn_dilate    = tk.Button(self.frame_right, text="dilate",    padx=3, width=BUTTON_WIDTH, command=self.cb_dilate)
+        self.btn_erode     = tk.Button(self.frame_right, text="erode",     padx=3, width=BUTTON_WIDTH, command=self.cb_erode)
+
+        self.btn_fft       = tk.Button(self.frame_right, text="FFT",       padx=3, width=BUTTON_WIDTH, command=self.cb_fft)
+        self.btn_ifft      = tk.Button(self.frame_right, text="iFFT",      padx=3, width=BUTTON_WIDTH, command=self.cb_ifft)
 
         self.btn_kernel    = tk.Button(self.frame_right, text="set convolution kernel",      padx=3, width=BUTTON_WIDTH, command= self.cb_set_kernel)
         
         i = 0
-        self.btn_nchannels.grid(row=i, column=0, ipady=5)
+        j = 0
+        self.btn_nchannels.grid(row=i, column=j, ipady=5)
         i = i + 1
-        self.btn_size.grid(row=i, column=0, ipady=5)
+        self.btn_size.grid(row=i, column=j, ipady=5)
 
         i = i + 1
-        self.btn_rgb2gray.grid(row=i, column=0, ipady=5)
+        self.btn_rgb2gray.grid(row=i, column=j, ipady=5)
         i = i + 1
-        self.btn_thresh.grid(row=i, column=0, ipady=5)
+        self.btn_thresh.grid(row=i, column=j, ipady=5)
 
         i = i + 1
-        self.btn_negative.grid(row=i, column=0, ipady=5)
+        self.btn_negative.grid(row=i, column=j, ipady=5)
         i = i + 1
-        self.btn_contrast.grid(row=i, column=0, ipady=5)
+        self.btn_contrast.grid(row=i, column=j, ipady=5)
         
         i = i + 1
-        self.btn_histeq.grid(row=i, column=0, ipady=5)
+        self.btn_histeq.grid(row=i, column=j, ipady=5)
         i = i + 1
-        self.btn_blur.grid(row=i, column=0, ipady=5)
+        self.btn_blur.grid(row=i, column=j, ipady=5)
 
         i = i + 1
-        self.btn_dilate.grid(row=i, column=0, ipady=5)
+        self.btn_kernel.grid(row=i, column=j, ipady=5)
+
+        # SEGUNDA COLUNA, APENAS OS QUE EU CRIEI
+        i = 0
+        j = j + 1
+
+        self.btn_dilate.grid(row=i, column=j, ipady=5)
         i = i + 1
-        self.btn_erode.grid(row=i, column=0, ipady=5)
+        self.btn_erode.grid(row=i, column=j, ipady=5)
 
         i = i + 1
-        self.btn_kernel.grid(row=i, column=0, ipady=5)
+        self.btn_fft.grid(row=i, column=j, ipady=5)
+        i = i + 1
+        self.btn_ifft.grid(row=i, column=j, ipady=5)
+
 
 
     """#########################################################
@@ -544,6 +559,27 @@ class WinMainTk(tk.Frame):
     def cb_erode(self):
         image = self.get_image()
         result = my.erode(image, self.strel)
+        self.set_preview(result)
+        self.ask_confirmation()
+
+    ## Callback: fft image.
+    #  Callback called when user presses button in toolbox.
+    #  Make FFT Transformation in image in main frame and ask for confirmation.
+    #  @param self The object pointer.
+    def cb_fft(self):
+        image = self.get_image()
+        result = np.real( my.fft_2d( image ) ).astype( np.uint8 )
+        self.set_preview(result)
+        self.ask_confirmation()
+
+    ## Callback: ifft image.
+    #  Callback called when user presses button in toolbox.
+    #  Make iFFT Transformation in image in main frame and ask for confirmation.
+    #  @param self The object pointer.
+    def cb_ifft(self):
+        image = self.get_image()
+        result = np.real( my.fft_2d( image ) ).astype( np.uint8 )
+        result = np.real( my.ifft_2d( image ) ).astype( np.uint8 )
         self.set_preview(result)
         self.ask_confirmation()
 
