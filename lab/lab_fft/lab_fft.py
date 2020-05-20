@@ -1,4 +1,4 @@
-import os
+﻿import os
 import platform
 import numpy as np
 import time as t
@@ -269,7 +269,8 @@ img_ifft = np.real( img_ifft ).astype( np.uint8 )
 compare_images( img_fft, img_ifft, "Imagem FFT", "Imagem iFFT", imagem.split('\\').pop() )"""
 
 for imagem in listaImagens:
-	img = imread( imagem )
+	#img = imread( imagem )
+	img = rgb2gray( imread( imagem ) )
 	print( imagem )
 	print( img.shape )
 
