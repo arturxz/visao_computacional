@@ -32,6 +32,12 @@ def imread( filename ):
 		return img[:, :, 0:3]
 	return img
 
+def imread_asgray( filename ):
+	img = mp.imread( filename, np.uint8 )
+	if( nchannels( img ) > 3 ):
+		return img[:, :, 0:3]
+	return rgb2gray( img )
+
 def is_gray_image( img ):
 	if( isinstance(img, np.ndarray) ):
 		if( img.ndim == 2 ):
@@ -239,35 +245,114 @@ def ifft_2d( img ):
 			for canal in range( 3 ):
 				img_fourrier[:, :, canal] = ifft_2d( img[:, :, canal] )
 			return img_fourrier
+"""
+def img_fft_shift( img ):
+	img_complex = None
+	img_shifted = np.fft.fftshift( img )
+
+	# SE TIVER MAIS DE UMA DIMENSAO, FAZ A ADICAO DA PARTE COMPLEXA COM A PARTE REAL
+	if( nchannels( img_shifted ) > 1 ):
+		img_complex = img_shifted[:,:,0] + 1j*img_shifted[:,:,1]
+	else:
+		img_complex = img_shifted
+	
+	# TRAZ O VALOR ABSOLUTO DOS ELEMENTOS DO ARRAY (|A|)
+	img_abs = np.abs( img_complex ) + 1
+	img_bounded = 20 * np.log( img_abs )
+
+	# GARANTINDO RETORNO NO INTERVALO [0..255]
+	f_img = 255 * img_bounded / np.max( img_bounded )
+	return f_img.astype( np.uint8 )
+"""
+
+def img_fft_shift( img ):
+	img_shifted = np.fft.fftshift( img )
+
+	# SE TIVER MAIS DE UMA DIMENSAO, FAZ A ADICAO DA PARTE COMPLEXA COM A PARTE REAL
+	if( nchannels( img_shifted ) > 1 ):
+		return img_shifted[:,:,0] + 1j*img_shifted[:,:,1]
+	else:
+		return img_shifted
+
+def img_fft_unshift( img ):
+	# DESFAZENDO SHIFT DA IMAGEM
+	img_shifted = np.fft.fftshift( img )
+
+	# DESFAZENDO FFT
+	inv_img = ifft_2d( img_shifted )
+
+	# TRAZ O VALOR ABSOLUTO DOS ELEMENTOS DO ARRAY (|A|)
+	filtered_img = np.abs( inv_img )
+	filtered_img -= filtered_img.min()
+
+	# NORMALIZANDO ARRAY PARA FICAR NO DOMINIO [0..255]
+	filtered_img = ( filtered_img * 255 ) / filtered_img.max()
+	return filtered_img.astype( np.uint8 )
+
+"""
+	lowpass_filter:	retorna uma janela passa-baixa no dominio da frequência.
+					r é o raio da janela passa-baixa. A janela é 2D
+"""
+def lowpass_filter( img, r=50 ):
+	print( "method: lowpass filter" )
+	# FAZENDO A JANELA 2D E CRESCENDO A FORÇA DO 
+	ham = np.hamming( img.shape[0] ).reshape( img.shape[0], 1 )
+	return np.sqrt(np.dot(ham, ham.T)) ** r
+
+def highpass_filter( img, r=50 ):
+	print( "method: highpass filter" )
+	# FAZENDO A JANELA 2D E CRESCENDO A FORÇA DO 
+	ham = 1 - np.hamming( img.shape[0] ).reshape( img.shape[0], 1 )
+	return np.sqrt( np.dot(ham, ham.T) ) ** r
+
+def diagonal_filter( img ):
+	print( "method: diagonal filter" )
+	return 255 - np.eye(img.shape[0],img.shape[0]) * 255
+
+def fft_visivel( img_fft ):
+	img_abs = np.abs( img_fft ) + 1
+	img_bounded = 20 * np.log( img_abs )
+	img = 255 * img_bounded / np.max( img_bounded )
+	return img.astype(np.uint8)
+
 
 """ 
-	Main
+	MAIN
 """
+# ABRINDO IMAGEM
 listaImagens = retornaListaArquivos()
-"""imagem = listaImagens[1]
-img = imread( imagem )
 
-print( imagem )
-print( img.shape )
+# STRINGS IMAGENS
+imagem = listaImagens[1]
+nome_imagem = imagem.split('\\').pop()
 
-imshow( img )
+img = imread_asgray( imagem )
+
+# JANELA DE PASSA-BAIXA
+#janela = diagonal_filter( img )
+#max_janela = janela.max()
+#janela = max_janela - janela
+janela = highpass_filter( img, 0 ) * diagonal_filter( img )
+janela += highpass_filter( img, -0.1 )
+#max_janela = janela.max()
+#janela = max_janela - janela
+imshow( fft_visivel( janela ) )
 
 # EXECUTANDO FFT
-ini = t.time()
 img_fft = fft_2d( img )
-print( "Tempo Execução FFT:", t.time()-ini )
+img_fft_shifted = img_fft_shift( img_fft )
 
-# EXECUTANDO iFFT
-ini = t.time()
-img_ifft = ifft_2d( img_fft )
-print( "Tempo Execução iFFT:", t.time()-ini, "\n" )
+# IMAGEM FILTRADA
+img_filtrada = img_fft_shifted * janela
+img_filtrada = img_fft_unshift( img_filtrada )
 
-# CONVERTENDO PARA QUE SEJAM VISIVEIS COMO IMAGENS
-img_fft = np.real( img_fft ).astype( np.uint8 )
-img_ifft = np.real( img_ifft ).astype( np.uint8 )
+compare_images( fft_visivel( img_fft_shifted ), fft_visivel( img_fft_shifted * janela ), "FFT Original", "FFT Filtrado", nome_imagem )
+compare_images( img, img_filtrada, "FFT Original", "FFT Filtrada", nome_imagem )
 
-compare_images( img_fft, img_ifft, "Imagem FFT", "Imagem iFFT", imagem.split('\\').pop() )"""
+#compare_images( img, img_filtrada, "Imagem", "Imagem Filtrada", nome_imagem )
+#imshow( fft_visivel( img_fft_shifted ) )
 
+"""
 for imagem in listaImagens:
 	#img = imread( imagem )
 	img = rgb2gray( imread( imagem ) )
@@ -291,3 +376,4 @@ for imagem in listaImagens:
 	img_ifft = np.real( img_ifft ).astype( np.uint8 )
 
 	compare_images( img_fft, img_ifft, "Imagem FFT", "Imagem iFFT", imagem.split('\\').pop() )
+"""
