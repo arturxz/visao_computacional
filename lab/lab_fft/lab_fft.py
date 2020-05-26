@@ -289,6 +289,16 @@ def img_fft_unshift( img ):
 	filtered_img = ( filtered_img * 255 ) / filtered_img.max()
 	return filtered_img.astype( np.uint8 )
 
+def fft_visivel( img_fft ):
+	img_abs = np.abs( img_fft ) + 1
+	img_bounded = 20 * np.log( img_abs )
+	img = 255 * img_bounded / np.max( img_bounded )
+	return img.astype(np.uint8)
+
+def retorna_porcentagem( n, por ):
+	por = por / 100
+	return np.uint8( np.floor( n * por ) )
+
 """
 	lowpass_filter:	retorna uma janela passa-baixa no dominio da frequência.
 					r é o raio da janela passa-baixa. A janela é 2D
@@ -305,16 +315,16 @@ def highpass_filter( img, r=50 ):
 	ham = 1 - np.hamming( img.shape[0] ).reshape( img.shape[0], 1 )
 	return np.sqrt( np.dot(ham, ham.T) ) ** r
 
-def diagonal_filter( img ):
+def diagonal_filter( img, por=30 ):
 	print( "method: diagonal filter" )
-	return 255 - np.eye(img.shape[0],img.shape[0]) * 255
+	tam = img.shape[0]
+	por = retorna_porcentagem( tam, por )
 
-def fft_visivel( img_fft ):
-	img_abs = np.abs( img_fft ) + 1
-	img_bounded = 20 * np.log( img_abs )
-	img = 255 * img_bounded / np.max( img_bounded )
-	return img.astype(np.uint8)
-
+	filtro = 255 - np.eye( tam, tam ) * 255
+	for i in range( por, tam-por ):
+		filtro[i] = 255
+		
+	return filtro
 
 """ 
 	MAIN
@@ -329,11 +339,11 @@ nome_imagem = imagem.split('\\').pop()
 img = imread_asgray( imagem )
 
 # JANELA DE PASSA-BAIXA
-#janela = diagonal_filter( img )
+janela = diagonal_filter( img, 45 ) * lowpass_filter( img, 1 )
 #max_janela = janela.max()
 #janela = max_janela - janela
-janela = highpass_filter( img, 0 ) * diagonal_filter( img )
-janela += highpass_filter( img, -0.1 )
+#janela = highpass_filter( img, 0 ) * diagonal_filter( img )
+#janela += highpass_filter( img, -0.1 )
 #max_janela = janela.max()
 #janela = max_janela - janela
 imshow( fft_visivel( janela ) )
