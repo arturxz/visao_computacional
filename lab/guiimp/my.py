@@ -652,7 +652,7 @@ def ifft_2d_np( img ):
 """
     MAIN AQUI
 """
-
+"""
 #listaImagens = retornaListaArquivos( "C:\\Users\\artur\\Google Drive\\UFS\\Mestrado\\[2020.1] Periodo 1\\COMPU0026 - VISAO COMPUTACIONAL\\lab\\guiimp\\img_fft" )
 listaImagens = retornaListaArquivos( "C:\\Users\\asnascimento\\Documents\\Mestrado\\visao_computacional\\lab\\lab_fft\\img" )
 path = listaImagens[1]
@@ -676,7 +676,7 @@ img_fft = np.real( img_fft ).astype( np.uint8 )
 img_ifft = np.real( img_ifft ).astype( np.uint8 )
 
 compare_images( erode( img, seSquare3() ), img_ifft, "Imagem Dilatada", "Imagem Dilatada em Fourrier", "Comparação FFT" )
-
+"""
 """
 ini = t.time()
 img_idft = idft_2d( img_dft )
