@@ -11,8 +11,10 @@ import tensorflow as tf
 from tensorflow import keras
 from skimage import io, transform
 
+from datetime import datetime
+
 # IMAGENS PARA TREINO
-QTD_ITENS_TREINO = 3000
+QTD_ITENS_TREINO = 2700
 QTD_ITENS_AVALIA = 3634
 
 # SHAPE GERAL
@@ -197,7 +199,8 @@ modelo.compile(
 )
 
 print( "-- Efetuando treino do modelo" )
-modelo.fit( lista_tumores_treino, lista_labels_treino, epochs=2 )
+modelo.fit( lista_tumores_treino, lista_labels_treino, epochs=80 )
+modelo.save( "modelos_salvos/test_" + datetime.now().strftime("%d-%m-%Y_%H-%M-%S") )
 
 # LIMPANDO DADOS DE TREINO DA MEMORIA
 lista_tumores_treino = None
