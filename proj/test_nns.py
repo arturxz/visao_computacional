@@ -285,7 +285,7 @@ if( modelo_anterior_carregado == False ):
     print( lista_labels_treino.shape )
 
     print( " ## -- TREINANDO O MODELO -- ##" )
-    modelo.fit( lista_itens_treino, lista_labels_treino, epochs=2 )
+    modelo.fit( lista_itens_treino, lista_labels_treino, epochs=20 )
 
     print( " ## -- SALVANDO O MODELO -- ##" )
     modelo.save( "modelos_salvos/test_inceptionv3_" + datetime.now().strftime("%d-%m-%Y") )

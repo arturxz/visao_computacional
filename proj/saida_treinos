@@ -1,0 +1,254 @@
+artur@ubuntu-desk:~/Documentos/proj_tireoide$ python3 treino_nns.py 
+ ## -- SEPARANDO IMAGENS -- ##
+ ## -- CRIANDO ARRAY DE ITENS PARA TREINO -- ##
+(3644, 224, 224, 3)
+(3644, 1)
+ ## -- CRIANDO AS CAMADAS PARA O MODELO -- ##
+2020-07-04 18:52:49.029349: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcuda.so.1
+2020-07-04 18:52:49.174187: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:981] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2020-07-04 18:52:49.174801: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1561] Found device 0 with properties: 
+pciBusID: 0000:07:00.0 name: GeForce GTX 1660 SUPER computeCapability: 7.5
+coreClock: 1.785GHz coreCount: 22 deviceMemorySize: 5,80GiB deviceMemoryBandwidth: 312,97GiB/s
+2020-07-04 18:52:49.204901: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcudart.so.10.1
+2020-07-04 18:52:49.470617: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcublas.so.10
+2020-07-04 18:52:49.626448: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcufft.so.10
+2020-07-04 18:52:49.712158: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcurand.so.10
+2020-07-04 18:52:49.979109: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcusolver.so.10
+2020-07-04 18:52:50.063404: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcusparse.so.10
+2020-07-04 18:52:50.063544: W tensorflow/stream_executor/platform/default/dso_loader.cc:55] Could not load dynamic library 'libcudnn.so.7'; dlerror: libcudnn.so.7: não é possível abrir arquivo compartilhado: Arquivo ou diretório inexistente
+2020-07-04 18:52:50.063561: W tensorflow/core/common_runtime/gpu/gpu_device.cc:1598] Cannot dlopen some GPU libraries. Please make sure the missing libraries mentioned above are installed properly if you would like to use GPU. Follow the guide at https://www.tensorflow.org/install/gpu for how to download and setup the required libraries for your platform.
+Skipping registering GPU devices...
+2020-07-04 18:52:50.063859: I tensorflow/core/platform/cpu_feature_guard.cc:143] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2020-07-04 18:52:50.244506: I tensorflow/core/platform/profile_utils/cpu_utils.cc:102] CPU Frequency: 3692500000 Hz
+2020-07-04 18:52:50.245138: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x7f4a90000b60 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2020-07-04 18:52:50.245176: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+2020-07-04 18:52:50.258298: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1102] Device interconnect StreamExecutor with strength 1 edge matrix:
+2020-07-04 18:52:50.258322: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1108]      
+ ## -- COMPILANDO O MODELO -- ##
+ ## -- TREINANDO O MODELO -- ##
+2020-07-04 18:52:53.349004: W tensorflow/core/framework/cpu_allocator_impl.cc:81] Allocation of 2194096128 exceeds 10% of free system memory.
+Epoch 1/20
+114/114 [==============================] - 947s 8s/step - loss: 0.7035 - accuracy: 0.6422
+Epoch 2/20
+114/114 [==============================] - 946s 8s/step - loss: 0.6251 - accuracy: 0.6792
+Epoch 3/20
+114/114 [==============================] - 964s 8s/step - loss: 0.5989 - accuracy: 0.7003
+Epoch 4/20
+114/114 [==============================] - 1214s 11s/step - loss: 0.5830 - accuracy: 0.7146
+Epoch 5/20
+114/114 [==============================] - 1039s 9s/step - loss: 0.5488 - accuracy: 0.7300
+Epoch 6/20
+114/114 [==============================] - 983s 9s/step - loss: 0.5483 - accuracy: 0.7316
+Epoch 7/20
+114/114 [==============================] - 943s 8s/step - loss: 0.5433 - accuracy: 0.7437
+Epoch 8/20
+114/114 [==============================] - 1015s 9s/step - loss: 0.5270 - accuracy: 0.7505
+Epoch 9/20
+114/114 [==============================] - 1114s 10s/step - loss: 0.5181 - accuracy: 0.7580
+Epoch 10/20
+114/114 [==============================] - 1110s 10s/step - loss: 0.5014 - accuracy: 0.7596
+Epoch 11/20
+114/114 [==============================] - 1289s 11s/step - loss: 0.5021 - accuracy: 0.7623
+Epoch 12/20
+114/114 [==============================] - 993s 9s/step - loss: 0.4952 - accuracy: 0.7648
+Epoch 13/20
+114/114 [==============================] - 1279s 11s/step - loss: 0.4934 - accuracy: 0.7711
+Epoch 14/20
+114/114 [==============================] - 1148s 10s/step - loss: 0.4753 - accuracy: 0.7741
+Epoch 15/20
+114/114 [==============================] - 1016s 9s/step - loss: 0.4503 - accuracy: 0.7901
+Epoch 16/20
+114/114 [==============================] - 1038s 9s/step - loss: 0.4489 - accuracy: 0.7961
+Epoch 17/20
+114/114 [==============================] - 1042s 9s/step - loss: 0.4278 - accuracy: 0.8010
+Epoch 18/20
+114/114 [==============================] - 1118s 10s/step - loss: 0.3909 - accuracy: 0.8244
+Epoch 19/20
+114/114 [==============================] - 1346s 12s/step - loss: 0.3732 - accuracy: 0.8326
+Epoch 20/20
+114/114 [==============================] - 1030s 9s/step - loss: 0.3464 - accuracy: 0.8474
+ ## -- SALVANDO O MODELO -- ##
+2020-07-05 00:57:58.020750: W tensorflow/python/util/util.cc:329] Sets are not currently considered sequences, but this may change in the future, so consider avoiding using them.
+WARNING:tensorflow:From /home/artur/.local/lib/python3.8/site-packages/tensorflow/python/ops/resource_variable_ops.py:1813: calling BaseResourceVariable.__init__ (from tensorflow.python.ops.resource_variable_ops) with constraint is deprecated and will be removed in a future version.
+Instructions for updating:
+If using Keras pass *_constraint arguments to layers.
+ ## -- CRIANDO AS CAMADAS PARA O MODELO -- ##
+ ## -- COMPILANDO O MODELO -- ##
+ ## -- TREINANDO O MODELO -- ##
+2020-07-05 00:58:24.802103: W tensorflow/core/framework/cpu_allocator_impl.cc:81] Allocation of 2194096128 exceeds 10% of free system memory.
+Epoch 1/20
+114/114 [==============================] - 1296s 11s/step - loss: 0.6786 - accuracy: 0.6432
+Epoch 2/20
+114/114 [==============================] - 304s 3s/step - loss: 0.5892 - accuracy: 0.7033
+Epoch 3/20
+114/114 [==============================] - 229s 2s/step - loss: 0.5625 - accuracy: 0.7198
+Epoch 4/20
+114/114 [==============================] - 210s 2s/step - loss: 0.5321 - accuracy: 0.7462
+Epoch 5/20
+114/114 [==============================] - 212s 2s/step - loss: 0.5190 - accuracy: 0.7519
+Epoch 6/20
+114/114 [==============================] - 208s 2s/step - loss: 0.5015 - accuracy: 0.7629
+Epoch 7/20
+114/114 [==============================] - 210s 2s/step - loss: 0.4638 - accuracy: 0.7868
+Epoch 8/20
+114/114 [==============================] - 209s 2s/step - loss: 0.4697 - accuracy: 0.7835
+Epoch 9/20
+114/114 [==============================] - 210s 2s/step - loss: 0.4402 - accuracy: 0.8002
+Epoch 10/20
+114/114 [==============================] - 207s 2s/step - loss: 0.4139 - accuracy: 0.8148
+Epoch 11/20
+114/114 [==============================] - 208s 2s/step - loss: 0.3972 - accuracy: 0.8205
+Epoch 12/20
+114/114 [==============================] - 208s 2s/step - loss: 0.3731 - accuracy: 0.8342
+Epoch 13/20
+114/114 [==============================] - 206s 2s/step - loss: 0.3517 - accuracy: 0.8482
+Epoch 14/20
+114/114 [==============================] - 206s 2s/step - loss: 0.3144 - accuracy: 0.8653
+Epoch 15/20
+114/114 [==============================] - 205s 2s/step - loss: 0.2624 - accuracy: 0.8891
+Epoch 16/20
+114/114 [==============================] - 205s 2s/step - loss: 0.2331 - accuracy: 0.9029
+Epoch 17/20
+114/114 [==============================] - 206s 2s/step - loss: 0.2575 - accuracy: 0.8908
+Epoch 18/20
+114/114 [==============================] - 207s 2s/step - loss: 0.2162 - accuracy: 0.9160
+Epoch 19/20
+114/114 [==============================] - 206s 2s/step - loss: 0.1672 - accuracy: 0.9374
+Epoch 20/20
+114/114 [==============================] - 207s 2s/step - loss: 0.1638 - accuracy: 0.9325
+ ## -- SALVANDO O MODELO -- ##
+ ## -- CRIANDO AS CAMADAS PARA O MODELO -- ##
+ ## -- COMPILANDO O MODELO -- ##
+ ## -- TREINANDO O MODELO -- ##
+2020-07-05 02:43:13.296923: W tensorflow/core/framework/cpu_allocator_impl.cc:81] Allocation of 2194096128 exceeds 10% of free system memory.
+Epoch 1/20
+114/114 [==============================] - 728s 6s/step - loss: 0.6584 - accuracy: 0.6556
+Epoch 2/20
+114/114 [==============================] - 202s 2s/step - loss: 0.6234 - accuracy: 0.6803
+Epoch 3/20
+114/114 [==============================] - 193s 2s/step - loss: 0.5678 - accuracy: 0.7234
+Epoch 4/20
+114/114 [==============================] - 195s 2s/step - loss: 0.5445 - accuracy: 0.7338
+Epoch 5/20
+114/114 [==============================] - 186s 2s/step - loss: 0.5099 - accuracy: 0.7541
+Epoch 6/20
+114/114 [==============================] - 184s 2s/step - loss: 0.4906 - accuracy: 0.7720
+Epoch 7/20
+114/114 [==============================] - 186s 2s/step - loss: 0.4724 - accuracy: 0.7796
+Epoch 8/20
+114/114 [==============================] - 184s 2s/step - loss: 0.4418 - accuracy: 0.8008
+Epoch 9/20
+114/114 [==============================] - 184s 2s/step - loss: 0.4068 - accuracy: 0.8178
+Epoch 10/20
+114/114 [==============================] - 184s 2s/step - loss: 0.4065 - accuracy: 0.8142
+Epoch 11/20
+114/114 [==============================] - 183s 2s/step - loss: 0.3919 - accuracy: 0.8216
+Epoch 12/20
+114/114 [==============================] - 183s 2s/step - loss: 0.3444 - accuracy: 0.8477
+Epoch 13/20
+114/114 [==============================] - 184s 2s/step - loss: 0.3166 - accuracy: 0.8729
+Epoch 14/20
+114/114 [==============================] - 184s 2s/step - loss: 0.2761 - accuracy: 0.8897
+Epoch 15/20
+114/114 [==============================] - 183s 2s/step - loss: 0.2665 - accuracy: 0.8902
+Epoch 16/20
+114/114 [==============================] - 188s 2s/step - loss: 0.2525 - accuracy: 0.8974
+Epoch 17/20
+114/114 [==============================] - 186s 2s/step - loss: 0.2017 - accuracy: 0.9210
+Epoch 18/20
+114/114 [==============================] - 186s 2s/step - loss: 0.2179 - accuracy: 0.9149
+Epoch 19/20
+114/114 [==============================] - 200s 2s/step - loss: 0.1894 - accuracy: 0.9215
+Epoch 20/20
+114/114 [==============================] - 194s 2s/step - loss: 0.1970 - accuracy: 0.9193
+ ## -- SALVANDO O MODELO -- ##
+ ## -- CRIANDO AS CAMADAS PARA O MODELO -- ##
+ ## -- COMPILANDO O MODELO -- ##
+ ## -- TREINANDO O MODELO -- ##
+2020-07-05 04:03:59.076324: W tensorflow/core/framework/cpu_allocator_impl.cc:81] Allocation of 2194096128 exceeds 10% of free system memory.
+Epoch 1/20
+114/114 [==============================] - 501s 4s/step - loss: 0.7062 - accuracy: 0.6545
+Epoch 2/20
+114/114 [==============================] - 431s 4s/step - loss: 0.6258 - accuracy: 0.7009
+Epoch 3/20
+114/114 [==============================] - 400s 4s/step - loss: 0.5991 - accuracy: 0.7091
+Epoch 4/20
+114/114 [==============================] - 402s 4s/step - loss: 0.5904 - accuracy: 0.6992
+Epoch 5/20
+114/114 [==============================] - 396s 3s/step - loss: 0.5818 - accuracy: 0.7110
+Epoch 6/20
+114/114 [==============================] - 396s 3s/step - loss: 0.5619 - accuracy: 0.7294
+Epoch 7/20
+114/114 [==============================] - 396s 3s/step - loss: 0.5432 - accuracy: 0.7475
+Epoch 8/20
+114/114 [==============================] - 396s 3s/step - loss: 0.5385 - accuracy: 0.7429
+Epoch 9/20
+114/114 [==============================] - 394s 3s/step - loss: 0.5283 - accuracy: 0.7486
+Epoch 10/20
+114/114 [==============================] - 395s 3s/step - loss: 0.5044 - accuracy: 0.7637
+Epoch 11/20
+114/114 [==============================] - 397s 3s/step - loss: 0.5015 - accuracy: 0.7769
+Epoch 12/20
+114/114 [==============================] - 398s 3s/step - loss: 0.4863 - accuracy: 0.7805
+Epoch 13/20
+114/114 [==============================] - 396s 3s/step - loss: 0.4801 - accuracy: 0.7785
+Epoch 14/20
+114/114 [==============================] - 397s 3s/step - loss: 0.4836 - accuracy: 0.7818
+Epoch 15/20
+114/114 [==============================] - 395s 3s/step - loss: 0.4653 - accuracy: 0.7909
+Epoch 16/20
+114/114 [==============================] - 394s 3s/step - loss: 0.4574 - accuracy: 0.7912
+Epoch 17/20
+114/114 [==============================] - 394s 3s/step - loss: 0.4715 - accuracy: 0.7854
+Epoch 18/20
+114/114 [==============================] - 399s 4s/step - loss: 0.4472 - accuracy: 0.7977
+Epoch 19/20
+114/114 [==============================] - 400s 4s/step - loss: 0.4359 - accuracy: 0.8052
+Epoch 20/20
+114/114 [==============================] - 399s 4s/step - loss: 0.4251 - accuracy: 0.8120
+ ## -- SALVANDO O MODELO -- ##
+ ## -- CRIANDO AS CAMADAS PARA O MODELO -- ##
+ ## -- COMPILANDO O MODELO -- ##
+ ## -- TREINANDO O MODELO -- ##
+2020-07-05 06:23:26.573844: W tensorflow/core/framework/cpu_allocator_impl.cc:81] Allocation of 2194096128 exceeds 10% of free system memory.
+Epoch 1/20
+114/114 [==============================] - 2986s 26s/step - loss: 0.6464 - accuracy: 0.6844
+Epoch 2/20
+114/114 [==============================] - 971s 9s/step - loss: 0.5796 - accuracy: 0.7124
+Epoch 3/20
+114/114 [==============================] - 915s 8s/step - loss: 0.5607 - accuracy: 0.7267
+Epoch 4/20
+114/114 [==============================] - 848s 7s/step - loss: 0.5304 - accuracy: 0.7470
+Epoch 5/20
+114/114 [==============================] - 1319s 12s/step - loss: 0.5146 - accuracy: 0.7602
+Epoch 6/20
+114/114 [==============================] - 903s 8s/step - loss: 0.5369 - accuracy: 0.7396
+Epoch 7/20
+114/114 [==============================] - 847s 7s/step - loss: 0.5033 - accuracy: 0.7678
+Epoch 8/20
+114/114 [==============================] - 839s 7s/step - loss: 0.4843 - accuracy: 0.7741
+Epoch 9/20
+114/114 [==============================] - 1158s 10s/step - loss: 0.4812 - accuracy: 0.7816
+Epoch 10/20
+114/114 [==============================] - 1050s 9s/step - loss: 0.4672 - accuracy: 0.7851
+Epoch 11/20
+114/114 [==============================] - 1060s 9s/step - loss: 0.4692 - accuracy: 0.7813
+Epoch 12/20
+114/114 [==============================] - 1231s 11s/step - loss: 0.4477 - accuracy: 0.7997
+Epoch 13/20
+114/114 [==============================] - 1192s 10s/step - loss: 0.4363 - accuracy: 0.8035
+Epoch 14/20
+114/114 [==============================] - 1112s 10s/step - loss: 0.4166 - accuracy: 0.8167
+Epoch 15/20
+114/114 [==============================] - 906s 8s/step - loss: 0.3953 - accuracy: 0.8288
+Epoch 16/20
+114/114 [==============================] - 913s 8s/step - loss: 0.3700 - accuracy: 0.8422
+Epoch 17/20
+114/114 [==============================] - 837s 7s/step - loss: 0.3287 - accuracy: 0.8573
+Epoch 18/20
+114/114 [==============================] - 832s 7s/step - loss: 0.3051 - accuracy: 0.8743
+Epoch 19/20
+114/114 [==============================] - 1484s 13s/step - loss: 0.2951 - accuracy: 0.8724
+Epoch 20/20
+114/114 [==============================] - 1237s 11s/step - loss: 0.2654 - accuracy: 0.8864
+ ## -- SALVANDO O MODELO -- ##

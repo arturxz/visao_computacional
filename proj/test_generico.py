@@ -210,18 +210,19 @@ modelo_anterior_carregado = False
 
 # CARREGANDO MODELO ANTERIOR
 try:
-    #modelo = keras.models.load_model("modelos_salvos/vgg_16_24.06")
-    modelo.load_weights( "modelos_salvos/generico/test_24-06-2020_18-08-58" )
-    modelo_anterior_carregado = True
+    modelo = keras.models.load_model("modelos_salvos/vgg_16_24.06")
+    #modelo.load_weights( "modelos_salvos/generico/test_24-06-2020_18-08-58" )
+    #modelo_anterior_carregado = True
 except Exception:
     modelo_anterior_carregado = False
     print( "Erro na carga do modelo. Carregando imagens de treio e treinando modelo." )
     print( "O modelo treinado será salvo." )
 
 if( modelo_anterior_carregado == False ):
+    print( "-- Treinando modelo" )
     modelo.fit( lista_tumores_treino,
                 lista_labels_treino, 
-                epochs=300,
+                epochs=10,
                 callbacks=[cp_callback] )
 
 # LIMPANDO DADOS DE TREINO DA MEMORIA

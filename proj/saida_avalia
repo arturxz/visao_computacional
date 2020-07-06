@@ -1,0 +1,55 @@
+## -- SEPARANDO IMAGENS -- ##
+ ## -- CRIANDO ARRAY DE ITENS PARA TREINO -- ##
+2020-07-05 18:21:03.318375: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcuda.so.1
+2020-07-05 18:21:03.506070: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:981] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2020-07-05 18:21:03.506718: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1561] Found device 0 with properties: 
+pciBusID: 0000:07:00.0 name: GeForce GTX 1660 SUPER computeCapability: 7.5
+coreClock: 1.785GHz coreCount: 22 deviceMemorySize: 5,80GiB deviceMemoryBandwidth: 312,97GiB/s
+2020-07-05 18:21:03.549514: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcudart.so.10.1
+2020-07-05 18:21:03.808572: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcublas.so.10
+2020-07-05 18:21:03.960169: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcufft.so.10
+2020-07-05 18:21:04.045440: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcurand.so.10
+2020-07-05 18:21:04.313019: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcusolver.so.10
+2020-07-05 18:21:04.486427: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcusparse.so.10
+2020-07-05 18:21:04.486576: W tensorflow/stream_executor/platform/default/dso_loader.cc:55] Could not load dynamic library 'libcudnn.so.7'; dlerror: libcudnn.so.7: não é possível abrir arquivo compartilhado: Arquivo ou diretório inexistente
+2020-07-05 18:21:04.486594: W tensorflow/core/common_runtime/gpu/gpu_device.cc:1598] Cannot dlopen some GPU libraries. Please make sure the missing libraries mentioned above are installed properly if you would like to use GPU. Follow the guide at https://www.tensorflow.org/install/gpu for how to download and setup the required libraries for your platform.
+Skipping registering GPU devices...
+2020-07-05 18:21:04.486911: I tensorflow/core/platform/cpu_feature_guard.cc:143] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2020-07-05 18:21:04.644297: I tensorflow/core/platform/profile_utils/cpu_utils.cc:102] CPU Frequency: 3692500000 Hz
+2020-07-05 18:21:04.644946: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x7f5fb8000b60 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2020-07-05 18:21:04.644983: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+2020-07-05 18:21:04.658646: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1102] Device interconnect StreamExecutor with strength 1 edge matrix:
+2020-07-05 18:21:04.658670: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1108]      
+ ### Avaliando modelo: inceptionResNetV2
+2020-07-05 18:22:02.067770: W tensorflow/core/framework/cpu_allocator_impl.cc:81] Allocation of 2194096128 exceeds 10% of free system memory.
+114/114 - 163s - loss: 0.8958 - accuracy: 0.7492
+   -- Acc:  0.7491767406463623
+   -- Loss: 0.8958152532577515
+ ### Avaliando modelo: inceptionv3
+2020-07-05 18:25:09.589135: W tensorflow/core/framework/cpu_allocator_impl.cc:81] Allocation of 2194096128 exceeds 10% of free system memory.
+114/114 - 69s - loss: 0.4601 - accuracy: 0.7876
+   -- Acc:  0.7875960469245911
+   -- Loss: 0.46010908484458923
+ ### Avaliando modelo: mobilenet
+2020-07-05 18:26:26.414032: W tensorflow/core/framework/cpu_allocator_impl.cc:81] Allocation of 2194096128 exceeds 10% of free system memory.
+114/114 - 30s - loss: 0.3007 - accuracy: 0.8845
+   -- Acc:  0.884467601776123
+   -- Loss: 0.3007080554962158
+ ### Avaliando modelo: mobilenetv2
+2020-07-05 18:27:06.557246: W tensorflow/core/framework/cpu_allocator_impl.cc:81] Allocation of 2194096128 exceeds 10% of free system memory.
+114/114 - 30s - loss: 0.7505 - accuracy: 0.4503
+   -- Acc:  0.4503293037414551
+   -- Loss: 0.7504624724388123
+ ### Avaliando modelo: ResNet101V2
+2020-07-05 18:28:04.594845: W tensorflow/core/framework/cpu_allocator_impl.cc:81] Allocation of 2194096128 exceeds 10% of free system memory.
+114/114 - 214s - loss: 0.5307 - accuracy: 0.7711
+   -- Acc:  0.7711306214332581
+   -- Loss: 0.5307180285453796
+ ### Avaliando modelo: VGG16
+114/114 - 337s - loss: 0.6882 - accuracy: 0.5497
+   -- Acc:  0.5496706962585449
+   -- Loss: 0.6882067322731018
+ ### Avaliando modelo: VGG19
+114/114 - 411s - loss: 0.6882 - accuracy: 0.5497
+   -- Acc:  0.5496706962585449
+   -- Loss: 0.6882192492485046
