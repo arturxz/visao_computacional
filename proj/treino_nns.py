@@ -212,6 +212,22 @@ def create_model_inceptionResNetV2():
 def create_model_inceptionv3():
     print( " ## -- CRIANDO AS CAMADAS PARA O MODELO -- ##" )
 
+    #modelo = tf.keras.applications.InceptionV3( input_shape=(224,224,3), weights=None, classes=2, classifier_activation='softmax' )
+    modelo = tf.keras.applications.InceptionV3( include_top=True, weights='imagenet', classes=2, classifier_activation='softmax' )
+
+
+    print( " ## -- COMPILANDO O MODELO -- ##" )
+    modelo.compile(
+        optimizer='adam',
+        loss='sparse_categorical_crossentropy',
+        metrics=['accuracy']
+    )
+
+    return modelo
+
+def create_model_inceptionv3_pretreinado():
+    print( " ## -- CRIANDO AS CAMADAS PARA O MODELO -- ##" )
+
     modelo = tf.keras.applications.InceptionV3( input_shape=(224,224,3), weights=None, classes=2, classifier_activation='softmax')
 
     print( " ## -- COMPILANDO O MODELO -- ##" )
@@ -289,17 +305,23 @@ def create_model_VGG19():
     modelo.compile(
         optimizer='adam',
         loss='sparse_categorical_crossentropy',
-        metrics=['accuracy']
+        metrics=['sparse_categorical_accuracy']
     )
 
     return modelo
 
 def treina_salva_modelo( modelo, nome_modelo, lista_itens_treino, lista_labels_treino ):
     print( " ## -- TREINANDO O MODELO -- ##" )
-    modelo.fit( lista_itens_treino, lista_labels_treino, epochs=20 )
+    print( " -- ## Itens:", lista_itens_treino.shape )
+    print( " -- ## Label:", lista_labels_treino.shape )
+    
+    modelo.fit( lista_itens_treino, 
+                lista_labels_treino,
+                batch_size=8,
+                epochs=2 )
 
     print( " ## -- SALVANDO O MODELO -- ##" )
-    modelo.save( "modelos_salvos/treino_dataset_completo/" + nome_modelo )
+    modelo.save( "modelos_salvos/treino_dataset_completo_GPU/" + nome_modelo )
 
 """
     ######################################
@@ -323,6 +345,7 @@ with open( "dataset_train/train.csv" ) as csv_file:
     
     print( " ## -- SEPARANDO IMAGENS -- ##" )
     for i in range( 0, len( lista_itens ) ):
+    #for i in range( 0, 10 ):
         lista_itens_treino.append( lista_itens[ i ] )
 
 lista_itens.clear()
@@ -339,7 +362,20 @@ lista_itens.clear()
 print( lista_itens_treino.shape )
 print( lista_labels_treino.shape )
 
-"""
+print( " ### SE HOUVER GPU, HABILITA ALOCAÇÃO DINAMICA DE MEMORIA" )
+gpus = tf.config.experimental.list_physical_devices('GPU')
+if gpus:
+    try:
+        # Currently, memory growth needs to be the same across GPUs
+        for gpu in gpus:
+            tf.config.experimental.set_memory_growth(gpu, True)
+        logical_gpus = tf.config.experimental.list_logical_devices('GPU')
+        print(len(gpus), "Physical GPUs,", len(logical_gpus), "Logical GPUs")
+    except RuntimeError as e:
+        # Memory growth must be set before GPUs have been initialized
+        print(e)
+
+
 # CRIANDO MODELO vgg19
 modelo = create_model_VGG19()
 treina_salva_modelo( modelo, "vgg19", lista_itens_treino, lista_labels_treino )
@@ -349,7 +385,6 @@ modelo = None
 modelo = create_model_VGG16()
 treina_salva_modelo( modelo, "vgg16", lista_itens_treino, lista_labels_treino )
 modelo = None
-"""
 
 # CRIANDO MODELO ResNet101V2
 modelo = create_model_ResNet101V2()
@@ -374,4 +409,9 @@ modelo = None
 # CRIANDO MODELO InceptionResNetV2
 modelo = create_model_inceptionResNetV2()
 treina_salva_modelo( modelo, "inceptionResNetV2", lista_itens_treino, lista_labels_treino )
+modelo = None
+
+# CRIANDO MODELO InceptionV3
+modelo = create_model_inceptionv3_pretreinado()
+treina_salva_modelo( modelo, "inceptionv3_pretreinado", lista_itens_treino, lista_labels_treino )
 modelo = None

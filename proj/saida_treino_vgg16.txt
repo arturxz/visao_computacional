@@ -1,0 +1,119 @@
+artur@ubuntu-artur:~/Documentos/proj_tireoide$ time python3 test_vgg16.py 
+ ## -- SEPARANDO IMAGENS -- ##
+ ## -- CRIANDO ARRAY DE ITENS PARA TREINO -- ##
+ ## -- CRIANDO AS CAMADAS PARA O MODELO -- ##
+2020-06-23 15:18:43.759289: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcuda.so.1
+2020-06-23 15:18:43.783358: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:981] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2020-06-23 15:18:43.783954: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1561] Found device 0 with properties: 
+pciBusID: 0000:07:00.0 name: GeForce GTX 1660 SUPER computeCapability: 7.5
+coreClock: 1.785GHz coreCount: 22 deviceMemorySize: 5.80GiB deviceMemoryBandwidth: 312.97GiB/s
+2020-06-23 15:18:43.784122: W tensorflow/stream_executor/platform/default/dso_loader.cc:55] Could not load dynamic library 'libcudart.so.10.1'; dlerror: libcudart.so.10.1: cannot open shared object file: No such file or directory
+2020-06-23 15:18:43.784206: W tensorflow/stream_executor/platform/default/dso_loader.cc:55] Could not load dynamic library 'libcublas.so.10'; dlerror: libcublas.so.10: cannot open shared object file: No such file or directory
+2020-06-23 15:18:43.785279: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcufft.so.10
+2020-06-23 15:18:43.785541: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcurand.so.10
+2020-06-23 15:18:43.787467: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcusolver.so.10
+2020-06-23 15:18:43.787567: W tensorflow/stream_executor/platform/default/dso_loader.cc:55] Could not load dynamic library 'libcusparse.so.10'; dlerror: libcusparse.so.10: cannot open shared object file: No such file or directory
+2020-06-23 15:18:43.787647: W tensorflow/stream_executor/platform/default/dso_loader.cc:55] Could not load dynamic library 'libcudnn.so.7'; dlerror: libcudnn.so.7: cannot open shared object file: No such file or directory
+2020-06-23 15:18:43.787662: W tensorflow/core/common_runtime/gpu/gpu_device.cc:1598] Cannot dlopen some GPU libraries. Please make sure the missing libraries mentioned above are installed properly if you would like to use GPU. Follow the guide at https://www.tensorflow.org/install/gpu for how to download and setup the required libraries for your platform.
+Skipping registering GPU devices...
+2020-06-23 15:18:43.787953: I tensorflow/core/platform/cpu_feature_guard.cc:143] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2020-06-23 15:18:43.793613: I tensorflow/core/platform/profile_utils/cpu_utils.cc:102] CPU Frequency: 3692630000 Hz
+2020-06-23 15:18:43.794019: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x7fc1a8000b60 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2020-06-23 15:18:43.794030: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+2020-06-23 15:18:43.794938: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1102] Device interconnect StreamExecutor with strength 1 edge matrix:
+2020-06-23 15:18:43.794947: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1108]      
+ ## -- COMPILANDO O MODELO -- ##
+(2600, 224, 224, 3)
+(2600, 1)
+ ## -- TREINANDO O MODELO -- ##
+2020-06-23 15:18:44.188602: W tensorflow/core/framework/cpu_allocator_impl.cc:81] Allocation of 1565491200 exceeds 10% of free system memory.
+Epoch 1/40
+82/82 [==============================] - 937s 11s/step - loss: 5.4019 - accuracy: 0.5450
+Epoch 2/40
+82/82 [==============================] - 935s 11s/step - loss: 0.6894 - accuracy: 0.5465
+Epoch 3/40
+82/82 [==============================] - 931s 11s/step - loss: 0.6893 - accuracy: 0.5465
+Epoch 4/40
+82/82 [==============================] - 929s 11s/step - loss: 0.6894 - accuracy: 0.5465
+Epoch 5/40
+82/82 [==============================] - 930s 11s/step - loss: 0.6895 - accuracy: 0.5465
+Epoch 6/40
+82/82 [==============================] - 930s 11s/step - loss: 0.6898 - accuracy: 0.5465
+Epoch 7/40
+82/82 [==============================] - 929s 11s/step - loss: 0.6894 - accuracy: 0.5465
+Epoch 8/40
+82/82 [==============================] - 931s 11s/step - loss: 0.6894 - accuracy: 0.5465
+Epoch 9/40
+82/82 [==============================] - 929s 11s/step - loss: 0.6897 - accuracy: 0.5465
+Epoch 10/40
+82/82 [==============================] - 929s 11s/step - loss: 0.6892 - accuracy: 0.5465
+Epoch 11/40
+82/82 [==============================] - 930s 11s/step - loss: 0.6893 - accuracy: 0.5465
+Epoch 12/40
+82/82 [==============================] - 930s 11s/step - loss: 0.6891 - accuracy: 0.5465
+Epoch 13/40
+82/82 [==============================] - 929s 11s/step - loss: 0.6894 - accuracy: 0.5465
+Epoch 14/40
+82/82 [==============================] - 931s 11s/step - loss: 0.6894 - accuracy: 0.5465
+Epoch 15/40
+82/82 [==============================] - 931s 11s/step - loss: 0.6892 - accuracy: 0.5465
+Epoch 16/40
+82/82 [==============================] - 929s 11s/step - loss: 0.6895 - accuracy: 0.5465
+Epoch 17/40
+82/82 [==============================] - 930s 11s/step - loss: 0.6896 - accuracy: 0.5465
+Epoch 18/40
+82/82 [==============================] - 933s 11s/step - loss: 0.6893 - accuracy: 0.5465
+Epoch 19/40
+82/82 [==============================] - 930s 11s/step - loss: 0.6894 - accuracy: 0.5465
+Epoch 20/40
+82/82 [==============================] - 929s 11s/step - loss: 0.6891 - accuracy: 0.5465
+Epoch 21/40
+82/82 [==============================] - 929s 11s/step - loss: 0.6891 - accuracy: 0.5465
+Epoch 22/40
+82/82 [==============================] - 930s 11s/step - loss: 0.6890 - accuracy: 0.5465
+Epoch 23/40
+82/82 [==============================] - 929s 11s/step - loss: 0.6889 - accuracy: 0.5465
+Epoch 24/40
+82/82 [==============================] - 930s 11s/step - loss: 0.6892 - accuracy: 0.5465
+Epoch 25/40
+82/82 [==============================] - 929s 11s/step - loss: 0.6894 - accuracy: 0.5465
+Epoch 26/40
+82/82 [==============================] - 930s 11s/step - loss: 0.6893 - accuracy: 0.5465
+Epoch 27/40
+82/82 [==============================] - 933s 11s/step - loss: 0.6890 - accuracy: 0.5465
+Epoch 28/40
+82/82 [==============================] - 931s 11s/step - loss: 0.6890 - accuracy: 0.5465
+Epoch 29/40
+82/82 [==============================] - 930s 11s/step - loss: 0.6891 - accuracy: 0.5465
+Epoch 30/40
+82/82 [==============================] - 932s 11s/step - loss: 0.6894 - accuracy: 0.5465
+Epoch 31/40
+82/82 [==============================] - 932s 11s/step - loss: 0.6894 - accuracy: 0.5465
+Epoch 32/40
+82/82 [==============================] - 931s 11s/step - loss: 0.6891 - accuracy: 0.5465
+Epoch 33/40
+82/82 [==============================] - 931s 11s/step - loss: 0.6892 - accuracy: 0.5465
+Epoch 34/40
+82/82 [==============================] - 931s 11s/step - loss: 0.6894 - accuracy: 0.5465
+Epoch 35/40
+82/82 [==============================] - 932s 11s/step - loss: 0.6890 - accuracy: 0.5465
+Epoch 36/40
+82/82 [==============================] - 930s 11s/step - loss: 0.6889 - accuracy: 0.5465
+Epoch 37/40
+82/82 [==============================] - 932s 11s/step - loss: 0.6891 - accuracy: 0.5465
+Epoch 38/40
+82/82 [==============================] - 931s 11s/step - loss: 0.6890 - accuracy: 0.5465
+Epoch 39/40
+82/82 [==============================] - 931s 11s/step - loss: 0.6891 - accuracy: 0.5465
+Epoch 40/40
+82/82 [==============================] - 936s 11s/step - loss: 0.6892 - accuracy: 0.5465
+ ## -- SALVANDO O MODELO -- ##
+2020-06-24 01:47:00.837898: W tensorflow/python/util/util.cc:329] Sets are not currently considered sequences, but this may change in the future, so consider avoiding using them.
+WARNING:tensorflow:From /home/artur/.local/lib/python3.8/site-packages/tensorflow/python/ops/resource_variable_ops.py:1813: calling BaseResourceVariable.__init__ (from tensorflow.python.ops.resource_variable_ops) with constraint is deprecated and will be removed in a future version.
+Instructions for updating:
+If using Keras pass *_constraint arguments to layers.
+
+real	629m31,694s
+user	8693m35,118s
+sys	322m14,980s
+artur@ubuntu-artur:~/Documentos/proj_tireoide$ 
