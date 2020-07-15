@@ -1,34 +1,34 @@
 import os
+import cv2
 import sys
 import random
 import warnings
 
 import numpy as np
 import pandas as pd
+import tensorflow as tf
 
 import matplotlib.pyplot as plt
 
 from tqdm import tqdm
+from models import *
+from pre_processing import preprocessa_dataset
+
 from itertools import chain
-from skimage.io import imread, imshow, imread_collection, concatenate_images
+from skimage.io import imread, imshow, imsave, imread_collection, concatenate_images
+from skimage.filters import threshold_mean
 from skimage.transform import resize
 from skimage.morphology import label
 
 from keras.models import Model, load_model
 from keras.layers import Input
-from keras.layers.core import Dropout, Lambda
-from keras.layers.convolutional import Conv2D, Conv2DTranspose
-from keras.layers.pooling import MaxPooling2D
-from keras.layers.merge import concatenate
 from keras.callbacks import EarlyStopping, ModelCheckpoint
 from keras import backend as K
-
-import tensorflow as tf
 
 # Set some parameters
 IMG_WIDTH = 256
 IMG_HEIGHT = 256
-IMG_CHANNELS = 3
+IMG_CHANNELS = 1
 TRAIN_PATH = 'dataset/train/'
 TEST_PATH = 'dataset/evaluate/'
 
@@ -50,10 +50,55 @@ if gpus:
         # Memory growth must be set before GPUs have been initialized
         print(e)
 
+def compare_images( img1, img2, img3=None, sub1="Imagem 1", sub2="Imagem 2", sub3="Imagem 3", titulo="Comparando Imagens" ):
+    print( "-- compare" )
+    ncols = 0
+    
+    img1_show = np.empty( img1.shape )
+    img2_show = np.empty( img2.shape )
+    img3_show = None
 
-# Get train and test IDs
-#train_ids = next(os.walk(TRAIN_PATH+"mask/"))[1]
-#test_ids = next(os.walk(TEST_PATH+"mask/"))[1]
+    if( int( np.max( img1 ) ) <= 1 ):
+        print( "-- img1 [0,1]" )
+        img1_show = np.asarray( img1*255, np.uint8 )
+    else:
+        img1_show = img1
+    
+    if( int( np.max( img2 ) ) <= 1 ):
+        print( "-- img2 [0,1]" )
+        img2_show = np.asarray( img2*255, np.uint8 )
+    else:
+        img2_show = img2
+
+    if( img3 is None ):
+        ncols = 2
+    else:
+        print( "-- img3 [0,1]" )
+        ncols = 3
+        img3_show = np.empty( img3.shape )
+        if( int( np.max( img3 ) ) <= 1 ):
+            img3_show = np.asarray( img3*255, np.uint8 )
+        else:
+            img3_show = img3
+
+    plt.subplot( 1, ncols, 1 )
+    plt.suptitle( titulo )
+    plt1 = plt.imshow( np.squeeze( img1_show ), cmap=plt.gray(), vmin=0, vmax=255 )
+    plt1.set_interpolation('nearest')
+    plt.title( sub1 )
+    
+    plt.subplot( 1, ncols, 2 )
+    plt2 = plt.imshow( np.squeeze( img2_show ), cmap=plt.gray(), vmin=0, vmax=255 )
+    plt2.set_interpolation('nearest')
+    plt.title( sub2 )
+    
+    if( not( img3_show is None ) ):
+        plt.subplot( 1, ncols, 3 )
+        plt3 = plt.imshow( np.squeeze( img3_show ), cmap=plt.gray(), vmin=0, vmax=255 )
+        plt3.set_interpolation('nearest')
+        plt.title( sub3 )
+    
+    plt.show()
 
 caminhos = [os.path.join(TRAIN_PATH+"image/", nome) for nome in os.listdir(TRAIN_PATH+"image/")]
 arquivos = [arq for arq in caminhos if os.path.isfile(arq)]
@@ -64,222 +109,104 @@ arquivos = [arq for arq in caminhos if os.path.isfile(arq)]
 mask_train = [arq for arq in arquivos if arq.lower().endswith(".png")]
 sys.stdout.flush()
 
-"""
-# Get and resize train images and masks
-print('Getting and resizing train images and masks ... ')
-sys.stdout.flush()
-for n, id_ in tqdm(enumerate(train_ids), total=len(train_ids)):
-    path = TRAIN_PATH + id_
-    img = imread(path + '/image/' + id_ + '.png')[:,:,:IMG_CHANNELS]
-    img = resize(img, (IMG_HEIGHT, IMG_WIDTH), mode='constant', preserve_range=True)
-    X_train[n] = img
-    mask = np.zeros((IMG_HEIGHT, IMG_WIDTH, 1), dtype=np.bool)
-    for mask_file in next(os.walk(path + '/mask/'))[2]:
-        mask_ = imread(path + '/mask/' + mask_file)
-        mask_ = np.expand_dims(resize(mask_, (IMG_HEIGHT, IMG_WIDTH), mode='constant', 
-                                      preserve_range=True), axis=-1)
-        mask = np.maximum(mask, mask_)
-    Y_train[n] = mask
-"""
-
+# PREPROCESSANDO IMAGENS E MASCARAS DE TREINO
 X_train = np.zeros((len(mask_train), IMG_HEIGHT, IMG_WIDTH, IMG_CHANNELS), dtype=np.uint8)
-Y_train = np.zeros((len(mask_train), IMG_HEIGHT, IMG_WIDTH, 1), dtype=np.bool)
-print( "Pré-processando dataset de treino" )
+Y_train = np.zeros((len(mask_train), IMG_HEIGHT, IMG_WIDTH, IMG_CHANNELS), dtype=np.uint8)
+
+print( "Lendo imagens e mascaras do dataset de treino" )
 for i in tqdm( range( len(imgs_train) ) ):
     img = imread( imgs_train[i], format="png" )
     img = resize( img, (IMG_WIDTH, IMG_HEIGHT), mode='constant', preserve_range=True )
     
-    mskb = np.zeros((IMG_HEIGHT, IMG_WIDTH, 1), dtype=np.bool)
+    #mskb = np.zeros((IMG_HEIGHT, IMG_WIDTH, 1), dtype=np.bool)
     msk = imread( mask_train[i], format="png" )
+    msk = resize( msk, (IMG_WIDTH, IMG_HEIGHT), mode='constant', preserve_range=True )
+    msk = (msk != 0) * 255
+    #msk = cv2.normalize(msk, None, alpha=0, beta=1, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_32F)
     
-    msk = np.expand_dims( resize( msk, (IMG_WIDTH, IMG_HEIGHT), mode='constant', preserve_range=True ), axis=-1 )
-    mskb = np.maximum( mskb, msk )
-    
-    X_train[i,:,:,0] = img
-    X_train[i,:,:,1] = img
-    X_train[i,:,:,2] = img
-    Y_train[i] = mskb
+    X_train[i,:,:,0] = np.squeeze( img )
+    Y_train[i,:,:,0] = msk
+
+print( "Processando imagens" )
+#X_train = preprocessa_dataset( X_train, IMG_WIDTH, IMG_HEIGHT )
+X_train = cv2.normalize(X_train, None, alpha=0, beta=1, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_32F)
+Y_train = cv2.normalize(Y_train, None, alpha=0, beta=1, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_32F)
+print( "Completo." )
 
 caminhos = [os.path.join(TEST_PATH+"image/", nome) for nome in os.listdir(TEST_PATH+"image/")]
 arquivos = [arq for arq in caminhos if os.path.isfile(arq)]
 imgs_test = [arq for arq in arquivos if arq.lower().endswith(".png")]
 
-# Get and resize test images
+# PREPROCESSANDO IMAGENS DE TESTE
 X_test = np.zeros((len(imgs_test), IMG_HEIGHT, IMG_WIDTH, IMG_CHANNELS), dtype=np.uint8)
 sizes_test = []
 sys.stdout.flush()
 
-"""
-print('Getting and resizing test images ... ')
-for n, id_ in tqdm(enumerate(test_ids), total=len(test_ids)):
-    path = TEST_PATH + id_
-    img = imread(path + '/image/' + id_ + '.png')[:,:,:IMG_CHANNELS]
-    sizes_test.append([img.shape[0], img.shape[1]])
-    img = resize(img, (IMG_HEIGHT, IMG_WIDTH), mode='constant', preserve_range=True)
-    X_test[n] = img
-"""
-print( "Pré-processando dataset de teste" )
+print( "Lendo imagens do dataset de teste" )
 for i in tqdm( range( len(imgs_test) ) ):
     img = imread( imgs_test[i], format="png" )
-    sizes_test.append([img.shape[0], img.shape[1]])
-
     img = resize( img, (IMG_WIDTH, IMG_HEIGHT), mode='constant', preserve_range=True )
-    X_test[i,:,:,0] = img
-    X_test[i,:,:,1] = img
-    X_test[i,:,:,2] = img
+    sizes_test.append( [img.shape[0], img.shape[1]] )
+    X_test[i,:,:,0] = np.squeeze( img )
 
-print('Done!')
+print( "Processando imagens" )
+#X_test = preprocessa_dataset( X_train, IMG_WIDTH, IMG_HEIGHT )
+X_test = cv2.normalize(X_test, None, alpha=0, beta=1, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_32F)
+print( "Completo." )
 
-# Check if training data looks all right
+# PRINTANDO
+print( "X Train shape", X_train.shape )
+print( "X Train Min, Max", np.min(X_train), np.max(X_train) )
+print( "Y Train shape", Y_train.shape )
+print( "Y Train Min, Max", np.min(Y_train), np.max(Y_train) )
+print( "X Test shape", X_test.shape )
+print( "X Test Min, Max", np.min(X_test), np.max(X_test) )
+
+# MOSTRANDO IMAGEM E MASCARA ALEATORIA DE TREINO DEPOIS DE PREPROCESSADA
 ix = random.randint( 0, len( imgs_train ) )
-imshow( X_train[ix] )
-plt.show()
-imshow( np.squeeze( Y_train[ix] ) )
-plt.show()
+compare_images( X_train[ix], np.squeeze( Y_train[ix] ), None, imgs_train[ix].split("/").pop(), mask_train[ix].split("/").pop(), "Exemplo de imagem e máscara de treino" )
 
-# Define IoU metric
-"""
-def mean_iou(y_true, y_pred):
-    prec = []
-    for t in np.arange(0.5, 1.0, 0.05): 
-        y_pred_ = tf.compat.v1.to_int32(y_pred > t)
-        score, up_opt = tf.compat.v1.metrics.mean_iou(y_true, y_pred_, 2)
-        tf.compat.v1.keras.backend.get_session().run(tf.compat.v1.local_variables_initializer())
-        #K.tensorflow_
-        with tf.control_dependencies([up_opt]):
-            score = tf.identity(score)
-        prec.append(score)
-    return K.mean(K.stack(prec), axis=0)
+# CARREGANDO MODELO
+model = unet_cnn( IMG_WIDTH, IMG_HEIGHT )
+#model = BCDU_net_D1( IMG_WIDTH, IMG_HEIGHT )
+#model = unet_vgg16( IMG_WIDTH, IMG_HEIGHT )
 
-"""
-# Build U-Net model
-inputs = Input((IMG_HEIGHT, IMG_WIDTH, IMG_CHANNELS))
-s = Lambda(lambda x: x / 255) (inputs)
-
-c1 = Conv2D(16, (3, 3), activation='elu', kernel_initializer='he_normal', padding='same') (s)
-c1 = Dropout(0.1) (c1)
-c1 = Conv2D(16, (3, 3), activation='elu', kernel_initializer='he_normal', padding='same') (c1)
-p1 = MaxPooling2D((2, 2)) (c1)
-
-c2 = Conv2D(32, (3, 3), activation='elu', kernel_initializer='he_normal', padding='same') (p1)
-c2 = Dropout(0.1) (c2)
-c2 = Conv2D(32, (3, 3), activation='elu', kernel_initializer='he_normal', padding='same') (c2)
-p2 = MaxPooling2D((2, 2)) (c2)
-
-c3 = Conv2D(64, (3, 3), activation='elu', kernel_initializer='he_normal', padding='same') (p2)
-c3 = Dropout(0.2) (c3)
-c3 = Conv2D(64, (3, 3), activation='elu', kernel_initializer='he_normal', padding='same') (c3)
-p3 = MaxPooling2D((2, 2)) (c3)
-
-c4 = Conv2D(128, (3, 3), activation='elu', kernel_initializer='he_normal', padding='same') (p3)
-c4 = Dropout(0.2) (c4)
-c4 = Conv2D(128, (3, 3), activation='elu', kernel_initializer='he_normal', padding='same') (c4)
-p4 = MaxPooling2D(pool_size=(2, 2)) (c4)
-
-c5 = Conv2D(256, (3, 3), activation='elu', kernel_initializer='he_normal', padding='same') (p4)
-c5 = Dropout(0.3) (c5)
-c5 = Conv2D(256, (3, 3), activation='elu', kernel_initializer='he_normal', padding='same') (c5)
-
-u6 = Conv2DTranspose(128, (2, 2), strides=(2, 2), padding='same') (c5)
-u6 = concatenate([u6, c4])
-c6 = Conv2D(128, (3, 3), activation='elu', kernel_initializer='he_normal', padding='same') (u6)
-c6 = Dropout(0.2) (c6)
-c6 = Conv2D(128, (3, 3), activation='elu', kernel_initializer='he_normal', padding='same') (c6)
-
-u7 = Conv2DTranspose(64, (2, 2), strides=(2, 2), padding='same') (c6)
-u7 = concatenate([u7, c3])
-c7 = Conv2D(64, (3, 3), activation='elu', kernel_initializer='he_normal', padding='same') (u7)
-c7 = Dropout(0.2) (c7)
-c7 = Conv2D(64, (3, 3), activation='elu', kernel_initializer='he_normal', padding='same') (c7)
-
-u8 = Conv2DTranspose(32, (2, 2), strides=(2, 2), padding='same') (c7)
-u8 = concatenate([u8, c2])
-c8 = Conv2D(32, (3, 3), activation='elu', kernel_initializer='he_normal', padding='same') (u8)
-c8 = Dropout(0.1) (c8)
-c8 = Conv2D(32, (3, 3), activation='elu', kernel_initializer='he_normal', padding='same') (c8)
-
-u9 = Conv2DTranspose(16, (2, 2), strides=(2, 2), padding='same') (c8)
-u9 = concatenate([u9, c1], axis=3)
-c9 = Conv2D(16, (3, 3), activation='elu', kernel_initializer='he_normal', padding='same') (u9)
-c9 = Dropout(0.1) (c9)
-c9 = Conv2D(16, (3, 3), activation='elu', kernel_initializer='he_normal', padding='same') (c9)
-
-outputs = Conv2D(1, (1, 1), activation='sigmoid') (c9)
-
-model = Model(inputs=[inputs], outputs=[outputs])
-#model.compile(optimizer='adam', loss='binary_crossentropy', metrics=[mean_iou])
 model.compile(optimizer='adam', loss='binary_crossentropy', metrics=tf.metrics.MeanIoU(num_classes=2) )
 model.summary()
 
-# Fit model
-earlystopper = EarlyStopping(patience=5, verbose=1)
-checkpointer = ModelCheckpoint('model-unet-1.h5', verbose=1, save_best_only=True)
-results = model.fit(X_train, Y_train, validation_split=0.1, batch_size=16, epochs=50, 
-                    callbacks=[earlystopper, checkpointer])
+# TREINA E SALVA MODELO
+earlystopper = EarlyStopping(patience=10, verbose=1)
+checkpointer = ModelCheckpoint('modelos_salvos/model_unet_256x256_elu_semLambda.h5', verbose=1, save_best_only=True)
+results = model.fit(X_train, Y_train, validation_split=0.1, shuffle=True, batch_size=4, epochs=50, callbacks=[earlystopper, checkpointer] )
 
-# Predict on train, val and test
-#model = load_model('model-unet-1.h5', custom_objects={'mean_iou': mean_iou})
-model = load_model('model-unet-1.h5', custom_objects={'MeanIoU': tf.keras.metrics.MeanIoU})
+# CARREGA MODELO
+model = load_model('modelos_salvos/model_unet_256x256_elu_semLambda.h5')
 
-preds_train = model.predict(X_train[:int(X_train.shape[0]*0.9)], verbose=1)
-preds_val = model.predict(X_train[int(X_train.shape[0]*0.9):], verbose=1)
-preds_test = model.predict(X_test, verbose=1)
+# FAZENDO PREDICAO PARA VALIDACAO COM TREINO E COM VALIDACAO
+preds_val   = model.predict(X_train[int(X_train.shape[0]*0.9):], verbose=1)
+preds_test  = model.predict(X_test, verbose=1)
 
-# Threshold predictions
-preds_train_t = (preds_train > 0.5).astype(np.uint8)
-preds_val_t = (preds_val > 0.5).astype(np.uint8)
-preds_test_t = (preds_test > 0.5).astype(np.uint8)
+# APLICANDO THRESHOLD
+preds_val_t = (preds_val > 0.5) * 255
+preds_val_t = np.asarray( preds_val_t, np.uint8 )
 
-# Create list of upsampled test masks
-preds_test_upsampled = []
-for i in range(len(preds_test)):
-    preds_test_upsampled.append(resize(np.squeeze(preds_test[i]), 
-                                       (sizes_test[i][0], sizes_test[i][1]), 
-                                       mode='constant', preserve_range=True))
+preds_test_t = (preds_test > 0.5) * 255
+preds_test_t = np.asarray( preds_test_t, np.uint8 )
 
-# Perform a sanity check on some random training samples
-ix = random.randint(0, len(preds_train_t))
-imshow(X_train[ix])
-plt.show()
-imshow(np.squeeze(Y_train[ix]))
-plt.show()
-imshow(np.squeeze(preds_train_t[ix]))
-plt.show()
+# MOSTRANDO 4 VALIDACOES ALEATORIAS
+ix = random.randint(0, len(preds_val_t-1))
+compare_images( X_train[ix], Y_train[ix], preds_val_t[ix], imgs_test[ix].split("/").pop(), imgs_test[ix].split("/").pop(), "Predito", "Imagem, Mascara e Predicao de mascara 1" )
 
-# Perform a sanity check on some random validation samples
-ix = random.randint(0, len(preds_val_t))
-imshow(X_train[int(X_train.shape[0]*0.9):][ix])
-plt.show()
-imshow(np.squeeze(Y_train[int(Y_train.shape[0]*0.9):][ix]))
-plt.show()
-imshow(np.squeeze(preds_val_t[ix]))
-plt.show()
+ix = random.randint(0, len(preds_val_t-1))
+compare_images( X_train[ix], Y_train[ix], preds_val_t[ix], imgs_test[ix].split("/").pop(), imgs_test[ix].split("/").pop(), "Predito", "Imagem, Mascara e Predicao de mascara 2" )
 
-# Run-length encoding stolen from https://www.kaggle.com/rakhlin/fast-run-length-encoding-python
-def rle_encoding(x):
-    dots = np.where(x.T.flatten() == 1)[0]
-    run_lengths = []
-    prev = -2
-    for b in dots:
-        if (b>prev+1): run_lengths.extend((b + 1, 0))
-        run_lengths[-1] += 1
-        prev = b
-    return run_lengths
+ix = random.randint(0, len(preds_val_t-1))
+compare_images( X_train[ix], Y_train[ix], preds_val_t[ix], imgs_test[ix].split("/").pop(), imgs_test[ix].split("/").pop(), "Predito", "Imagem, Mascara e Predicao de mascara 3" )
 
-def prob_to_rles(x, cutoff=0.5):
-    lab_img = label(x > cutoff)
-    for i in range(1, lab_img.max() + 1):
-        yield rle_encoding(lab_img == i)
+ix = random.randint(0, len(preds_val_t-1))
+compare_images( X_train[ix], Y_train[ix], preds_val_t[ix], imgs_test[ix].split("/").pop(), imgs_test[ix].split("/").pop(), "Predito", "Imagem, Mascara e Predicao de mascara 4" )
 
-new_test_ids = []
-rles = []
-for n, id_ in enumerate(test_ids):
-    rle = list(prob_to_rles(preds_test_upsampled[n]))
-    rles.extend(rle)
-    new_test_ids.extend([id_] * len(rle))
-
-# Create submission DataFrame
-sub = pd.DataFrame()
-sub['ImageId'] = new_test_ids
-sub['EncodedPixels'] = pd.Series(rles).apply(lambda x: ' '.join(str(y) for y in x))
-sub.to_csv('sub-unet-1.csv', index=False)
+# SALVANDO IMAGENS
+print( "qtd imgs avaliacao:", len( imgs_test ) )
+for i in range( len( preds_val_t ) ):
+    imsave( TEST_PATH + "result/" + imgs_test[i].split("/").pop(), preds_test_t[i] )

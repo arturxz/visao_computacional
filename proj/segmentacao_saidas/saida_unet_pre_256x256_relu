@@ -1,0 +1,151 @@
+169/169 [==============================] - ETA: 0s - loss: 0.3435 - mean_io_u: 0.4482
+Epoch 00001: val_loss improved from inf to 0.25370, saving model to modelos_salvos/model_unet_pre_256x256_relu.h5
+169/169 [==============================] - 28s 166ms/step - loss: 0.3435 - mean_io_u: 0.4482 - val_loss: 0.2537 - val_mean_io_u: 0.4522
+Epoch 2/50
+169/169 [==============================] - ETA: 0s - loss: 0.2541 - mean_io_u: 0.4482 
+Epoch 00002: val_loss improved from 0.25370 to 0.23920, saving model to modelos_salvos/model_unet_pre_256x256_relu.h5
+169/169 [==============================] - 26s 153ms/step - loss: 0.2541 - mean_io_u: 0.4482 - val_loss: 0.2392 - val_mean_io_u: 0.4522
+Epoch 3/50
+169/169 [==============================] - ETA: 0s - loss: 0.2516 - mean_io_u: 0.4482 
+Epoch 00003: val_loss did not improve from 0.23920
+169/169 [==============================] - 26s 152ms/step - loss: 0.2516 - mean_io_u: 0.4482 - val_loss: 0.2396 - val_mean_io_u: 0.4522
+Epoch 4/50
+169/169 [==============================] - ETA: 0s - loss: 0.2449 - mean_io_u: 0.4482 
+Epoch 00004: val_loss improved from 0.23920 to 0.22819, saving model to modelos_salvos/model_unet_pre_256x256_relu.h5
+169/169 [==============================] - 26s 153ms/step - loss: 0.2449 - mean_io_u: 0.4482 - val_loss: 0.2282 - val_mean_io_u: 0.4522
+Epoch 5/50
+169/169 [==============================] - ETA: 0s - loss: 0.2359 - mean_io_u: 0.4482 
+Epoch 00005: val_loss did not improve from 0.22819
+169/169 [==============================] - 26s 151ms/step - loss: 0.2359 - mean_io_u: 0.4482 - val_loss: 0.2631 - val_mean_io_u: 0.4522
+Epoch 6/50
+169/169 [==============================] - ETA: 0s - loss: 0.2058 - mean_io_u: 0.4482 
+Epoch 00006: val_loss improved from 0.22819 to 0.19245, saving model to modelos_salvos/model_unet_pre_256x256_relu.h5
+169/169 [==============================] - 26s 152ms/step - loss: 0.2058 - mean_io_u: 0.4482 - val_loss: 0.1924 - val_mean_io_u: 0.4522
+Epoch 7/50
+169/169 [==============================] - ETA: 0s - loss: 0.1825 - mean_io_u: 0.4482 
+Epoch 00007: val_loss improved from 0.19245 to 0.18334, saving model to modelos_salvos/model_unet_pre_256x256_relu.h5
+169/169 [==============================] - 26s 153ms/step - loss: 0.1825 - mean_io_u: 0.4482 - val_loss: 0.1833 - val_mean_io_u: 0.4522
+Epoch 8/50
+169/169 [==============================] - ETA: 0s - loss: 0.1673 - mean_io_u: 0.4482 
+Epoch 00008: val_loss improved from 0.18334 to 0.17396, saving model to modelos_salvos/model_unet_pre_256x256_relu.h5
+169/169 [==============================] - 26s 153ms/step - loss: 0.1673 - mean_io_u: 0.4482 - val_loss: 0.1740 - val_mean_io_u: 0.4522
+Epoch 9/50
+169/169 [==============================] - ETA: 0s - loss: 0.1623 - mean_io_u: 0.4482 
+Epoch 00009: val_loss improved from 0.17396 to 0.16502, saving model to modelos_salvos/model_unet_pre_256x256_relu.h5
+169/169 [==============================] - 26s 153ms/step - loss: 0.1623 - mean_io_u: 0.4482 - val_loss: 0.1650 - val_mean_io_u: 0.4522
+Epoch 10/50
+169/169 [==============================] - ETA: 0s - loss: 0.1524 - mean_io_u: 0.4482 
+Epoch 00010: val_loss did not improve from 0.16502
+169/169 [==============================] - 26s 151ms/step - loss: 0.1524 - mean_io_u: 0.4482 - val_loss: 0.1672 - val_mean_io_u: 0.4522
+Epoch 11/50
+169/169 [==============================] - ETA: 0s - loss: 0.1493 - mean_io_u: 0.4482 
+Epoch 00011: val_loss improved from 0.16502 to 0.15555, saving model to modelos_salvos/model_unet_pre_256x256_relu.h5
+169/169 [==============================] - 26s 153ms/step - loss: 0.1493 - mean_io_u: 0.4482 - val_loss: 0.1555 - val_mean_io_u: 0.4522
+Epoch 12/50
+169/169 [==============================] - ETA: 0s - loss: 0.1478 - mean_io_u: 0.4482 
+Epoch 00012: val_loss improved from 0.15555 to 0.15445, saving model to modelos_salvos/model_unet_pre_256x256_relu.h5
+169/169 [==============================] - 26s 153ms/step - loss: 0.1478 - mean_io_u: 0.4482 - val_loss: 0.1544 - val_mean_io_u: 0.4522
+Epoch 13/50
+169/169 [==============================] - ETA: 0s - loss: 0.1356 - mean_io_u: 0.4482 
+Epoch 00013: val_loss improved from 0.15445 to 0.15219, saving model to modelos_salvos/model_unet_pre_256x256_relu.h5
+169/169 [==============================] - 26s 153ms/step - loss: 0.1356 - mean_io_u: 0.4482 - val_loss: 0.1522 - val_mean_io_u: 0.4522
+Epoch 14/50
+169/169 [==============================] - ETA: 0s - loss: 0.1292 - mean_io_u: 0.4483 
+Epoch 00014: val_loss improved from 0.15219 to 0.13877, saving model to modelos_salvos/model_unet_pre_256x256_relu.h5
+169/169 [==============================] - 26s 152ms/step - loss: 0.1292 - mean_io_u: 0.4483 - val_loss: 0.1388 - val_mean_io_u: 0.4522
+Epoch 15/50
+169/169 [==============================] - ETA: 0s - loss: 0.1255 - mean_io_u: 0.4483 
+Epoch 00015: val_loss improved from 0.13877 to 0.12815, saving model to modelos_salvos/model_unet_pre_256x256_relu.h5
+169/169 [==============================] - 26s 152ms/step - loss: 0.1255 - mean_io_u: 0.4483 - val_loss: 0.1282 - val_mean_io_u: 0.4522
+Epoch 16/50
+169/169 [==============================] - ETA: 0s - loss: 0.1215 - mean_io_u: 0.4482 
+Epoch 00016: val_loss did not improve from 0.12815
+169/169 [==============================] - 26s 151ms/step - loss: 0.1215 - mean_io_u: 0.4482 - val_loss: 0.1291 - val_mean_io_u: 0.4522
+Epoch 17/50
+169/169 [==============================] - ETA: 0s - loss: 0.1125 - mean_io_u: 0.4483 
+Epoch 00017: val_loss did not improve from 0.12815
+169/169 [==============================] - 26s 151ms/step - loss: 0.1125 - mean_io_u: 0.4483 - val_loss: 0.1325 - val_mean_io_u: 0.4522
+Epoch 18/50
+169/169 [==============================] - ETA: 0s - loss: 0.1088 - mean_io_u: 0.4484 
+Epoch 00018: val_loss did not improve from 0.12815
+169/169 [==============================] - 26s 151ms/step - loss: 0.1088 - mean_io_u: 0.4484 - val_loss: 0.1339 - val_mean_io_u: 0.4522
+Epoch 19/50
+169/169 [==============================] - ETA: 0s - loss: 0.1005 - mean_io_u: 0.4484 
+Epoch 00019: val_loss improved from 0.12815 to 0.12238, saving model to modelos_salvos/model_unet_pre_256x256_relu.h5
+169/169 [==============================] - 26s 152ms/step - loss: 0.1005 - mean_io_u: 0.4484 - val_loss: 0.1224 - val_mean_io_u: 0.4523
+Epoch 20/50
+169/169 [==============================] - ETA: 0s - loss: 0.0929 - mean_io_u: 0.4485 
+Epoch 00020: val_loss improved from 0.12238 to 0.11129, saving model to modelos_salvos/model_unet_pre_256x256_relu.h5
+169/169 [==============================] - 26s 152ms/step - loss: 0.0929 - mean_io_u: 0.4485 - val_loss: 0.1113 - val_mean_io_u: 0.4522
+Epoch 21/50
+169/169 [==============================] - ETA: 0s - loss: 0.0887 - mean_io_u: 0.4493 
+Epoch 00021: val_loss did not improve from 0.11129
+169/169 [==============================] - 26s 151ms/step - loss: 0.0887 - mean_io_u: 0.4493 - val_loss: 0.1149 - val_mean_io_u: 0.4525
+Epoch 22/50
+169/169 [==============================] - ETA: 0s - loss: 0.0882 - mean_io_u: 0.4502 
+Epoch 00022: val_loss did not improve from 0.11129
+169/169 [==============================] - 26s 151ms/step - loss: 0.0882 - mean_io_u: 0.4502 - val_loss: 0.1240 - val_mean_io_u: 0.4536
+Epoch 23/50
+169/169 [==============================] - ETA: 0s - loss: 0.0786 - mean_io_u: 0.4496 
+Epoch 00023: val_loss improved from 0.11129 to 0.10525, saving model to modelos_salvos/model_unet_pre_256x256_relu.h5
+169/169 [==============================] - 26s 153ms/step - loss: 0.0786 - mean_io_u: 0.4496 - val_loss: 0.1052 - val_mean_io_u: 0.4532
+Epoch 24/50
+169/169 [==============================] - ETA: 0s - loss: 0.0744 - mean_io_u: 0.4495 
+Epoch 00024: val_loss did not improve from 0.10525
+169/169 [==============================] - 26s 151ms/step - loss: 0.0744 - mean_io_u: 0.4495 - val_loss: 0.1099 - val_mean_io_u: 0.4522
+Epoch 25/50
+169/169 [==============================] - ETA: 0s - loss: 0.0740 - mean_io_u: 0.4516 
+Epoch 00025: val_loss did not improve from 0.10525
+169/169 [==============================] - 26s 151ms/step - loss: 0.0740 - mean_io_u: 0.4516 - val_loss: 0.1115 - val_mean_io_u: 0.4530
+Epoch 26/50
+169/169 [==============================] - ETA: 0s - loss: 0.0696 - mean_io_u: 0.4565 
+Epoch 00026: val_loss did not improve from 0.10525
+169/169 [==============================] - 26s 151ms/step - loss: 0.0696 - mean_io_u: 0.4565 - val_loss: 0.1105 - val_mean_io_u: 0.4528
+Epoch 27/50
+169/169 [==============================] - ETA: 0s - loss: 0.0665 - mean_io_u: 0.4537 
+Epoch 00027: val_loss did not improve from 0.10525
+169/169 [==============================] - 26s 151ms/step - loss: 0.0665 - mean_io_u: 0.4537 - val_loss: 0.1177 - val_mean_io_u: 0.4728
+Epoch 28/50
+169/169 [==============================] - ETA: 0s - loss: 0.0585 - mean_io_u: 0.4579 
+Epoch 00028: val_loss improved from 0.10525 to 0.10415, saving model to modelos_salvos/model_unet_pre_256x256_relu.h5
+169/169 [==============================] - 26s 152ms/step - loss: 0.0585 - mean_io_u: 0.4579 - val_loss: 0.1042 - val_mean_io_u: 0.4549
+Epoch 29/50
+169/169 [==============================] - ETA: 0s - loss: 0.0583 - mean_io_u: 0.4559 
+Epoch 00029: val_loss did not improve from 0.10415
+169/169 [==============================] - 26s 151ms/step - loss: 0.0583 - mean_io_u: 0.4559 - val_loss: 0.1079 - val_mean_io_u: 0.4618
+Epoch 30/50
+169/169 [==============================] - ETA: 0s - loss: 0.0520 - mean_io_u: 0.4545 
+Epoch 00030: val_loss did not improve from 0.10415
+169/169 [==============================] - 26s 151ms/step - loss: 0.0520 - mean_io_u: 0.4545 - val_loss: 0.1109 - val_mean_io_u: 0.4640
+Epoch 31/50
+169/169 [==============================] - ETA: 0s - loss: 0.0507 - mean_io_u: 0.4617 
+Epoch 00031: val_loss did not improve from 0.10415
+169/169 [==============================] - 26s 151ms/step - loss: 0.0507 - mean_io_u: 0.4617 - val_loss: 0.1192 - val_mean_io_u: 0.4617
+Epoch 32/50
+169/169 [==============================] - ETA: 0s - loss: 0.0511 - mean_io_u: 0.4574 
+Epoch 00032: val_loss did not improve from 0.10415
+169/169 [==============================] - 26s 151ms/step - loss: 0.0511 - mean_io_u: 0.4574 - val_loss: 0.1119 - val_mean_io_u: 0.4538
+Epoch 33/50
+169/169 [==============================] - ETA: 0s - loss: 0.0532 - mean_io_u: 0.4583 
+Epoch 00033: val_loss did not improve from 0.10415
+169/169 [==============================] - 26s 151ms/step - loss: 0.0532 - mean_io_u: 0.4583 - val_loss: 0.1093 - val_mean_io_u: 0.4529
+Epoch 34/50
+169/169 [==============================] - ETA: 0s - loss: 0.0486 - mean_io_u: 0.4586 
+Epoch 00034: val_loss did not improve from 0.10415
+169/169 [==============================] - 26s 151ms/step - loss: 0.0486 - mean_io_u: 0.4586 - val_loss: 0.1069 - val_mean_io_u: 0.4638
+Epoch 35/50
+169/169 [==============================] - ETA: 0s - loss: 0.0438 - mean_io_u: 0.4695 
+Epoch 00035: val_loss did not improve from 0.10415
+169/169 [==============================] - 26s 152ms/step - loss: 0.0438 - mean_io_u: 0.4695 - val_loss: 0.1096 - val_mean_io_u: 0.4580
+Epoch 36/50
+169/169 [==============================] - ETA: 0s - loss: 0.0418 - mean_io_u: 0.4765 
+Epoch 00036: val_loss did not improve from 0.10415
+169/169 [==============================] - 26s 151ms/step - loss: 0.0418 - mean_io_u: 0.4765 - val_loss: 0.1166 - val_mean_io_u: 0.4558
+Epoch 37/50
+169/169 [==============================] - ETA: 0s - loss: 0.0394 - mean_io_u: 0.4732 
+Epoch 00037: val_loss did not improve from 0.10415
+169/169 [==============================] - 26s 151ms/step - loss: 0.0394 - mean_io_u: 0.4732 - val_loss: 0.1295 - val_mean_io_u: 0.4825
+Epoch 38/50
+169/169 [==============================] - ETA: 0s - loss: 0.0424 - mean_io_u: 0.4680 
+Epoch 00038: val_loss did not improve from 0.10415
+169/169 [==============================] - 26s 151ms/step - loss: 0.0424 - mean_io_u: 0.4680 - val_loss: 0.1179 - val_mean_io_u: 0.4709

@@ -1,0 +1,119 @@
+Epoch 1/50
+2020-07-14 21:50:15.855794: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcudnn.so.7
+2020-07-14 21:50:16.745721: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcublas.so.10
+45/45 [==============================] - ETA: 0s - loss: 0.5401 - mean_io_u: 0.3612
+Epoch 00001: val_loss improved from inf to 0.38277, saving model to modelos_salvos/model_BCDU_net_D1_pre_300x300.h5
+45/45 [==============================] - 1s 24ms/step - loss: 0.5401 - mean_io_u: 0.3612 - val_loss: 0.3828 - val_mean_io_u: 0.3743
+Epoch 2/50
+45/45 [==============================] - ETA: 0s - loss: 0.3390 - mean_io_u: 0.3612
+Epoch 00002: val_loss improved from 0.38277 to 0.25739, saving model to modelos_salvos/model_BCDU_net_D1_pre_300x300.h5
+45/45 [==============================] - 1s 19ms/step - loss: 0.3390 - mean_io_u: 0.3612 - val_loss: 0.2574 - val_mean_io_u: 0.3743
+Epoch 3/50
+45/45 [==============================] - ETA: 0s - loss: 0.2798 - mean_io_u: 0.3612
+Epoch 00003: val_loss did not improve from 0.25739
+45/45 [==============================] - 1s 15ms/step - loss: 0.2798 - mean_io_u: 0.3612 - val_loss: 0.2683 - val_mean_io_u: 0.3743
+Epoch 4/50
+45/45 [==============================] - ETA: 0s - loss: 0.2713 - mean_io_u: 0.3612
+Epoch 00004: val_loss improved from 0.25739 to 0.23169, saving model to modelos_salvos/model_BCDU_net_D1_pre_300x300.h5
+45/45 [==============================] - 1s 19ms/step - loss: 0.2713 - mean_io_u: 0.3612 - val_loss: 0.2317 - val_mean_io_u: 0.3743
+Epoch 5/50
+45/45 [==============================] - ETA: 0s - loss: 0.2313 - mean_io_u: 0.3612
+Epoch 00005: val_loss improved from 0.23169 to 0.21271, saving model to modelos_salvos/model_BCDU_net_D1_pre_300x300.h5
+45/45 [==============================] - 1s 21ms/step - loss: 0.2313 - mean_io_u: 0.3612 - val_loss: 0.2127 - val_mean_io_u: 0.3743
+Epoch 6/50
+45/45 [==============================] - ETA: 0s - loss: 0.2183 - mean_io_u: 0.3612
+Epoch 00006: val_loss improved from 0.21271 to 0.18817, saving model to modelos_salvos/model_BCDU_net_D1_pre_300x300.h5
+45/45 [==============================] - 1s 21ms/step - loss: 0.2183 - mean_io_u: 0.3612 - val_loss: 0.1882 - val_mean_io_u: 0.3743
+Epoch 7/50
+45/45 [==============================] - ETA: 0s - loss: 0.2067 - mean_io_u: 0.3612
+Epoch 00007: val_loss improved from 0.18817 to 0.16287, saving model to modelos_salvos/model_BCDU_net_D1_pre_300x300.h5
+45/45 [==============================] - 1s 21ms/step - loss: 0.2067 - mean_io_u: 0.3612 - val_loss: 0.1629 - val_mean_io_u: 0.3743
+Epoch 8/50
+45/45 [==============================] - ETA: 0s - loss: 0.1892 - mean_io_u: 0.3612
+Epoch 00008: val_loss did not improve from 0.16287
+45/45 [==============================] - 1s 15ms/step - loss: 0.1892 - mean_io_u: 0.3612 - val_loss: 0.1637 - val_mean_io_u: 0.3743
+Epoch 9/50
+45/45 [==============================] - ETA: 0s - loss: 0.1731 - mean_io_u: 0.3612
+Epoch 00009: val_loss improved from 0.16287 to 0.15602, saving model to modelos_salvos/model_BCDU_net_D1_pre_300x300.h5
+45/45 [==============================] - 1s 21ms/step - loss: 0.1731 - mean_io_u: 0.3612 - val_loss: 0.1560 - val_mean_io_u: 0.3743
+Epoch 10/50
+45/45 [==============================] - ETA: 0s - loss: 0.1722 - mean_io_u: 0.3616
+Epoch 00010: val_loss did not improve from 0.15602
+45/45 [==============================] - 1s 15ms/step - loss: 0.1722 - mean_io_u: 0.3616 - val_loss: 0.1818 - val_mean_io_u: 0.3743
+Epoch 11/50
+45/45 [==============================] - ETA: 0s - loss: 0.1722 - mean_io_u: 0.3612
+Epoch 00011: val_loss did not improve from 0.15602
+45/45 [==============================] - 1s 15ms/step - loss: 0.1722 - mean_io_u: 0.3612 - val_loss: 0.2088 - val_mean_io_u: 0.3743
+Epoch 12/50
+45/45 [==============================] - ETA: 0s - loss: 0.2097 - mean_io_u: 0.3614
+Epoch 00012: val_loss did not improve from 0.15602
+45/45 [==============================] - 1s 15ms/step - loss: 0.2097 - mean_io_u: 0.3614 - val_loss: 0.2054 - val_mean_io_u: 0.3743
+Epoch 13/50
+45/45 [==============================] - ETA: 0s - loss: 0.1840 - mean_io_u: 0.3612
+Epoch 00013: val_loss improved from 0.15602 to 0.15039, saving model to modelos_salvos/model_BCDU_net_D1_pre_300x300.h5
+45/45 [==============================] - 1s 19ms/step - loss: 0.1840 - mean_io_u: 0.3612 - val_loss: 0.1504 - val_mean_io_u: 0.3743
+Epoch 14/50
+45/45 [==============================] - ETA: 0s - loss: 0.1490 - mean_io_u: 0.3612
+Epoch 00014: val_loss improved from 0.15039 to 0.14126, saving model to modelos_salvos/model_BCDU_net_D1_pre_300x300.h5
+45/45 [==============================] - 1s 19ms/step - loss: 0.1490 - mean_io_u: 0.3612 - val_loss: 0.1413 - val_mean_io_u: 0.3743
+Epoch 15/50
+45/45 [==============================] - ETA: 0s - loss: 0.1400 - mean_io_u: 0.3612
+Epoch 00015: val_loss did not improve from 0.14126
+45/45 [==============================] - 1s 15ms/step - loss: 0.1400 - mean_io_u: 0.3612 - val_loss: 0.1432 - val_mean_io_u: 0.3743
+Epoch 16/50
+45/45 [==============================] - ETA: 0s - loss: 0.1219 - mean_io_u: 0.3614
+Epoch 00016: val_loss improved from 0.14126 to 0.13706, saving model to modelos_salvos/model_BCDU_net_D1_pre_300x300.h5
+45/45 [==============================] - 1s 21ms/step - loss: 0.1219 - mean_io_u: 0.3614 - val_loss: 0.1371 - val_mean_io_u: 0.3743
+Epoch 17/50
+45/45 [==============================] - ETA: 0s - loss: 0.1046 - mean_io_u: 0.3612
+Epoch 00017: val_loss did not improve from 0.13706
+45/45 [==============================] - 1s 15ms/step - loss: 0.1046 - mean_io_u: 0.3612 - val_loss: 0.1624 - val_mean_io_u: 0.3743
+Epoch 18/50
+45/45 [==============================] - ETA: 0s - loss: 0.1248 - mean_io_u: 0.3615
+Epoch 00018: val_loss did not improve from 0.13706
+45/45 [==============================] - 1s 15ms/step - loss: 0.1248 - mean_io_u: 0.3615 - val_loss: 0.1577 - val_mean_io_u: 0.3743
+Epoch 19/50
+45/45 [==============================] - ETA: 0s - loss: 0.1080 - mean_io_u: 0.3648
+Epoch 00019: val_loss improved from 0.13706 to 0.13516, saving model to modelos_salvos/model_BCDU_net_D1_pre_300x300.h5
+45/45 [==============================] - 1s 21ms/step - loss: 0.1080 - mean_io_u: 0.3648 - val_loss: 0.1352 - val_mean_io_u: 0.3743
+Epoch 20/50
+45/45 [==============================] - ETA: 0s - loss: 0.0940 - mean_io_u: 0.3647
+Epoch 00020: val_loss did not improve from 0.13516
+45/45 [==============================] - 1s 15ms/step - loss: 0.0940 - mean_io_u: 0.3647 - val_loss: 0.1480 - val_mean_io_u: 0.3744
+Epoch 21/50
+45/45 [==============================] - ETA: 0s - loss: 0.0816 - mean_io_u: 0.3688
+Epoch 00021: val_loss did not improve from 0.13516
+45/45 [==============================] - 1s 15ms/step - loss: 0.0816 - mean_io_u: 0.3688 - val_loss: 0.1484 - val_mean_io_u: 0.3822
+Epoch 22/50
+45/45 [==============================] - ETA: 0s - loss: 0.0787 - mean_io_u: 0.3723
+Epoch 00022: val_loss did not improve from 0.13516
+45/45 [==============================] - 1s 15ms/step - loss: 0.0787 - mean_io_u: 0.3723 - val_loss: 0.1504 - val_mean_io_u: 0.3774
+Epoch 23/50
+45/45 [==============================] - ETA: 0s - loss: 0.0756 - mean_io_u: 0.3663
+Epoch 00023: val_loss did not improve from 0.13516
+45/45 [==============================] - 1s 15ms/step - loss: 0.0756 - mean_io_u: 0.3663 - val_loss: 0.1501 - val_mean_io_u: 0.3773
+Epoch 24/50
+45/45 [==============================] - ETA: 0s - loss: 0.0630 - mean_io_u: 0.3966
+Epoch 00024: val_loss did not improve from 0.13516
+45/45 [==============================] - 1s 15ms/step - loss: 0.0630 - mean_io_u: 0.3966 - val_loss: 0.1544 - val_mean_io_u: 0.3941
+Epoch 25/50
+45/45 [==============================] - ETA: 0s - loss: 0.0646 - mean_io_u: 0.3896
+Epoch 00025: val_loss did not improve from 0.13516
+45/45 [==============================] - 1s 15ms/step - loss: 0.0646 - mean_io_u: 0.3896 - val_loss: 0.2021 - val_mean_io_u: 0.4477
+Epoch 26/50
+45/45 [==============================] - ETA: 0s - loss: 0.0601 - mean_io_u: 0.4092
+Epoch 00026: val_loss did not improve from 0.13516
+45/45 [==============================] - 1s 15ms/step - loss: 0.0601 - mean_io_u: 0.4092 - val_loss: 0.1858 - val_mean_io_u: 0.4116
+Epoch 27/50
+45/45 [==============================] - ETA: 0s - loss: 0.0662 - mean_io_u: 0.3846
+Epoch 00027: val_loss did not improve from 0.13516
+45/45 [==============================] - 1s 15ms/step - loss: 0.0662 - mean_io_u: 0.3846 - val_loss: 0.1477 - val_mean_io_u: 0.3855
+Epoch 28/50
+45/45 [==============================] - ETA: 0s - loss: 0.0552 - mean_io_u: 0.4011
+Epoch 00028: val_loss did not improve from 0.13516
+45/45 [==============================] - 1s 15ms/step - loss: 0.0552 - mean_io_u: 0.4011 - val_loss: 0.1584 - val_mean_io_u: 0.4181
+Epoch 29/50
+45/45 [==============================] - ETA: 0s - loss: 0.0545 - mean_io_u: 0.4401
+Epoch 00029: val_loss did not improve from 0.13516
+45/45 [==============================] - 1s 15ms/step - loss: 0.0545 - mean_io_u: 0.4401 - val_loss: 0.1539 - val_mean_io_u: 0.4006
+Epoch 00029: early stopping
